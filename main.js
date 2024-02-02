@@ -33,20 +33,11 @@
  * @return {string}
  */
 var gcdOfStrings = function (str1, str2) {
-    if (str1.includes(str2)) {
-        let set = new Set(str2);
-        let myArr = Array.from(set);
-        let result = myArr.join("");
-        return result;
-    }
-    else if (str2.includes(str1)) {
-        let set = new Set(str1);
-        let myArr = Array.from(set);
-        let result = myArr.join("");
-        return result;
-    }
-    else {
-        return "";
+    if (str1 + str2 !== str2 + str1) {
+        return ""; // If the strings don't have a common prefix, return an empty string
     }
 
+    // Find the GCD using Euclidean algorithm
+    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+    return str1.substring(0, gcd(str1.length, str2.length));
 };
