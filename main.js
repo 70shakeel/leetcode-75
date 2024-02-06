@@ -1,40 +1,63 @@
-// Can Place Flowers
+// Reverse Vowels of a String
 // Easy
 // Topics
 // Companies
-// You have a long flowerbed in which some of the plots are planted, and some are not.However, flowers cannot be planted in adjacent plots.
+// Given a string s, reverse only all the vowels in the string and return it.
 
-// Given an integer array flowerbed containing 0's and 1's, where 0 means empty and 1 means not empty, and an integer n, return true if n new flowers can be planted in the flowerbed without violating the no - adjacent - flowers rule and false otherwise.
+// The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
 
 
 
 //     Example 1:
 
-// Input: flowerbed = [1, 0, 0, 0, 1], n = 1
-// Output: true
+// Input: s = "hello"
+// Output: "holle"
 // Example 2:
 
-// Input: flowerbed = [1, 0, 0, 0, 1], n = 2
-// Output: false
+// Input: s = "leetcode"
+// Output: "leotcede"
 /**
- * @param {number[]} flowerbed
- * @param {number} n
- * @return {boolean}
+ * @param {string} s
+ * @return {string}
  */
-var canPlaceFlowers = function (flowerbed, n) {
-    let result = 0;
-    for (let i = 0; i < flowerbed.length; i++) {
-        if (flowerbed[i] == 0) {
-            if (flowerbed[i - 1] !== 1 && flowerbed[i + 1] !== 1) {
-                result++;
-                i++;
-            }
+var reverseVowels = function (s) {
+    function removeVowelsFromString(str) {
+        return str.replace(/[aeiouAEIOU]/g, '');
+    }
+    function addLetterToString(str, index, letter) {
+        if (index < 0 || index > str.length) {
+            return "Invalid index";
         }
+        return str.slice(0, index) + letter + str.slice(index);
     }
-    if (n < result || n == result) {
-        return true
+    function isVowel(character) {
+        // Convert the character to lowercase to handle uppercase vowels as well
+        character = character.toLowerCase();
+
+        // Check if the character is one of the vowels
+        return ['a', 'e', 'i', 'o', 'u'].includes(character);
     }
-    else {
-        return false;
+    let indexArr = [];
+    let vowelArr = [];
+    let reverseVowelArr = [];
+    let modifiedString = "";
+    for (let i = 0; i < s.length; i++) {
+
+        if (isVowel(s[i])) {
+            indexArr.push(i);
+            vowelArr.push(s[i]);
+        }
+
     }
+    modifiedString = removeVowelsFromString(s);
+    console.log("vowel array", vowelArr);
+
+    reverseVowelArr = vowelArr.reverse();
+    for (let i = 0; i < vowelArr.length; i++) {
+        modifiedString = addLetterToString(modifiedString, indexArr[i], reverseVowelArr[i])
+    }
+    console.log("reverseVowelArr: ", reverseVowelArr);
+    console.log("index array", indexArr);
+    console.log("modified string", modifiedString)
+    return modifiedString;
 };
