@@ -1,51 +1,44 @@
-// Product of Array Except Self
+// Increasing Triplet Subsequence
 // Solved
 // Medium
 // Topics
 // Companies
-// Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
-
-// The product of any prefix or suffix of nums is guaranteed to fit in a 32 - bit integer.
-
-// You must write an algorithm that runs in O(n) time and without using the division operation.
+// Given an integer array nums, return true if there exists a triple of indices(i, j, k) such that i < j < k and nums[i] < nums[j] < nums[k].If no such indices exists, return false.
 
 
 
 //     Example 1:
 
-// Input: nums = [1, 2, 3, 4]
-// Output: [24, 12, 8, 6]
-// Example 2:
+// Input: nums = [1, 2, 3, 4, 5]
+// Output: true
+// Explanation: Any triplet where i < j < k is valid.
+//     Example 2:
 
-// Input: nums = [-1, 1, 0, -3, 3]
-// Output: [0, 0, 9, 0, 0]
+// Input: nums = [5, 4, 3, 2, 1]
+// Output: false
+// Explanation: No triplet exists.
+//     Example 3:
+
+// Input: nums = [2, 1, 5, 0, 4, 6]
+// Output: true
+// Explanation: The triplet(3, 4, 5) is valid because nums[3] == 0 < nums[4] == 4 < nums[5] == 6.
 /**
  * @param {number[]} nums
- * @return {number[]}
+ * @return {boolean}
  */
-var productExceptSelf = function (nums) {
-    let product = 1;
-    let zeroCount = 0;
+var increasingTriplet = function (nums) {
+    let first = Infinity;
+    let second = Infinity;
 
-    // Calculate the product of all elements and count zeroes
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] !== 0) {
-            product *= nums[i];
+    for (let num of nums) {
+        if (num <= first) {
+            first = num;
+        } else if (num <= second) {
+            second = num;
         } else {
-            zeroCount++;
+            return true;
         }
     }
 
-    // If there are more than one zero, all elements except zeroes will be 0
-    if (zeroCount > 1) {
-        return Array(nums.length).fill(0);
-    }
-
-    // If there is only one zero, all elements except zero will be 0, and zero will be the product of all other elements
-    if (zeroCount === 1) {
-        return nums.map(num => num === 0 ? product : 0);
-    }
-
-    // If there are no zeroes, divide the product by the current element to get the product except self
-    return nums.map(num => product / num);
+    return false;
 };
