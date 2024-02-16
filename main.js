@@ -1,49 +1,55 @@
-// Container With Most Water
+// Max Number of K - Sum Pairs
 // Solved
 // Medium
 // Topics
 // Companies
 // Hint
-// You are given an integer array height of length n.There are n vertical lines drawn such that the two endpoints of the ith line are(i, 0) and(i, height[i]).
+// You are given an integer array nums and an integer k.
 
-// Find two lines that together with the x - axis form a container, such that the container contains the most water.
+// In one operation, you can pick two numbers from the array whose sum equals k and remove them from the array.
 
-// Return the maximum amount of water a container can store.
-
-// Notice that you may not slant the container.
+// Return the maximum number of operations you can perform on the array.
 
 
 
 //     Example 1:
 
+// Input: nums = [1, 2, 3, 4], k = 5
+// Output: 2
+// Explanation: Starting with nums = [1, 2, 3, 4]:
+// - Remove numbers 1 and 4, then nums = [2, 3]
+//     - Remove numbers 2 and 3, then nums = []
+// There are no more pairs that sum up to 5, hence a total of 2 operations.
+//     Example 2:
 
-// Input: height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
-// Output: 49
-// Explanation: The above vertical lines are represented by array[1, 8, 6, 2, 5, 4, 8, 3, 7].In this case, the max area of water(blue section) the container can contain is 49.
-// Example 2:
-
-// Input: height = [1, 1]
+// Input: nums = [3, 1, 3, 4, 3], k = 6
 // Output: 1
+// Explanation: Starting with nums = [3, 1, 3, 4, 3]:
+// - Remove the first two 3's, then nums = [1,4,3]
+// There are no more pairs that sum up to 6, hence a total of 1 operation.
 /**
- * @param {number[]} height
+ * @param {number[]} nums
+ * @param {number} k
  * @return {number}
  */
-var maxArea = function (height) {
-    let maxArea = 0;
+var maxOperations = function (nums, k) {
+    nums.sort((a, b) => a - b);
     let left = 0;
-    let right = height.length - 1;
+    let right = nums.length - 1;
+    let result = 0;
 
     while (left < right) {
-        let h = Math.min(height[left], height[right]);
-        let area = h * (right - left);
-        maxArea = Math.max(maxArea, area);
-
-        if (height[left] < height[right]) {
+        let sum = nums[left] + nums[right];
+        if (sum === k) {
+            result++;
+            left++;
+            right--;
+        } else if (sum < k) {
             left++;
         } else {
             right--;
         }
     }
 
-    return maxArea;
+    return result;
 };
