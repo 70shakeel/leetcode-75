@@ -1,34 +1,62 @@
-// Maximum Average Subarray I
+// Maximum Number of Vowels in a Substring of Given Length
 // Solved
-// Easy
+// Medium
 // Topics
 // Companies
-// You are given an integer array nums consisting of n elements, and an integer k.
+// Hint
+// Given a string s and an integer k, return the maximum number of vowel letters in any substring of s with length k.
 
-// Find a contiguous subarray whose length is equal to k that has the maximum average value and return this value.Any answer with a calculation error less than 10 - 5 will be accepted.
+// Vowel letters in English are 'a', 'e', 'i', 'o', and 'u'.
 
 
 
 //     Example 1:
 
-// Input: nums = [1, 12, -5, -6, 50, 3], k = 4
-// Output: 12.75000
-// Explanation: Maximum average is(12 - 5 - 6 + 50) / 4 = 51 / 4 = 12.75
-// Example 2:
+// Input: s = "abciiidef", k = 3
+// Output: 3
+// Explanation: The substring "iii" contains 3 vowel letters.
+//     Example 2:
 
-// Input: nums = [5], k = 1
-// Output: 5.00000
-var findMaxAverage = function (nums, k) {
-    let sum = 0;
+// Input: s = "aeiou", k = 2
+// Output: 2
+// Explanation: Any substring of length 2 contains 2 vowels.
+//     Example 3:
+
+// Input: s = "leetcode", k = 3
+// Output: 2
+// Explanation: "lee", "eet" and "ode" contain 2 vowels.
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var maxVowels = function (s, k) {
+    let maxVowelCount = 0;
+    let currentVowelCount = 0;
+
+    // Calculate vowel count for the first window of length k
     for (let i = 0; i < k; i++) {
-        sum += nums[i];
+        if (isVowel(s[i])) {
+            currentVowelCount++;
+        }
     }
 
-    let maxSum = sum;
-    for (let i = k; i < nums.length; i++) {
-        sum += nums[i] - nums[i - k];
-        maxSum = Math.max(maxSum, sum);
+    maxVowelCount = currentVowelCount;
+
+    // Slide the window and update maxVowelCount
+    for (let i = k; i < s.length; i++) {
+        if (isVowel(s[i])) {
+            currentVowelCount++;
+        }
+        if (isVowel(s[i - k])) {
+            currentVowelCount--;
+        }
+        maxVowelCount = Math.max(maxVowelCount, currentVowelCount);
     }
 
-    return maxSum / k;
+    return maxVowelCount;
 };
+
+function isVowel(char) {
+    return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
+}
