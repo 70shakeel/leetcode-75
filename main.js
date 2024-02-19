@@ -1,62 +1,44 @@
-// Maximum Number of Vowels in a Substring of Given Length
+// Max Consecutive Ones III
 // Solved
 // Medium
 // Topics
 // Companies
 // Hint
-// Given a string s and an integer k, return the maximum number of vowel letters in any substring of s with length k.
-
-// Vowel letters in English are 'a', 'e', 'i', 'o', and 'u'.
+// Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
 
 
 
 //     Example 1:
 
-// Input: s = "abciiidef", k = 3
-// Output: 3
-// Explanation: The substring "iii" contains 3 vowel letters.
+// Input: nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], k = 2
+// Output: 6
+// Explanation: [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1]
+// Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
 //     Example 2:
 
-// Input: s = "aeiou", k = 2
-// Output: 2
-// Explanation: Any substring of length 2 contains 2 vowels.
-//     Example 3:
+// Input: nums = [0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1], k = 3
+// Output: 10
+// Explanation: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1]
+// Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
+var longestOnes = function (nums, k) {
+    let left = 0;
+    let zeroCount = 0;
+    let result = 0;
 
-// Input: s = "leetcode", k = 3
-// Output: 2
-// Explanation: "lee", "eet" and "ode" contain 2 vowels.
-/**
- * @param {string} s
- * @param {number} k
- * @return {number}
- */
-var maxVowels = function (s, k) {
-    let maxVowelCount = 0;
-    let currentVowelCount = 0;
-
-    // Calculate vowel count for the first window of length k
-    for (let i = 0; i < k; i++) {
-        if (isVowel(s[i])) {
-            currentVowelCount++;
+    for (let right = 0; right < nums.length; right++) {
+        if (nums[right] === 0) {
+            zeroCount++;
         }
+
+        while (zeroCount > k) {
+            if (nums[left] === 0) {
+                zeroCount--;
+            }
+            left++;
+        }
+
+        result = Math.max(result, right - left + 1);
     }
 
-    maxVowelCount = currentVowelCount;
-
-    // Slide the window and update maxVowelCount
-    for (let i = k; i < s.length; i++) {
-        if (isVowel(s[i])) {
-            currentVowelCount++;
-        }
-        if (isVowel(s[i - k])) {
-            currentVowelCount--;
-        }
-        maxVowelCount = Math.max(maxVowelCount, currentVowelCount);
-    }
-
-    return maxVowelCount;
+    return result;
 };
-
-function isVowel(char) {
-    return ['a', 'e', 'i', 'o', 'u'].includes(char.toLowerCase());
-}
