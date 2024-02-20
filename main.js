@@ -1,44 +1,53 @@
-// Max Consecutive Ones III
+// Longest Subarray of 1's After Deleting One Element
 // Solved
 // Medium
 // Topics
 // Companies
 // Hint
-// Given a binary array nums and an integer k, return the maximum number of consecutive 1's in the array if you can flip at most k 0's.
+// Given a binary array nums, you should delete one element from it.
+
+// Return the size of the longest non - empty subarray containing only 1's in the resulting array. Return 0 if there is no such subarray.
 
 
 
-//     Example 1:
+// Example 1:
 
-// Input: nums = [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0], k = 2
-// Output: 6
-// Explanation: [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1]
-// Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
-//     Example 2:
+// Input: nums = [1, 1, 0, 1]
+// Output: 3
+// Explanation: After deleting the number in position 2, [1, 1, 1] contains 3 numbers with value of 1's.
+// Example 2:
 
-// Input: nums = [0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1], k = 3
-// Output: 10
-// Explanation: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1]
-// Bolded numbers were flipped from 0 to 1. The longest subarray is underlined.
-var longestOnes = function (nums, k) {
-    let left = 0;
-    let zeroCount = 0;
-    let result = 0;
+// Input: nums = [0, 1, 1, 1, 0, 1, 1, 0, 1]
+// Output: 5
+// Explanation: After deleting the number in position 4, [0, 1, 1, 1, 1, 1, 0, 1] longest subarray with value of 1's is [1,1,1,1,1].
+// Example 3:
 
-    for (let right = 0; right < nums.length; right++) {
-        if (nums[right] === 0) {
-            zeroCount++;
-        }
+// Input: nums = [1, 1, 1]
+// Output: 2
+// Explanation: You must delete one element.
+var longestSubarray = function (nums) {
+    let maxOnes = 0;
+    let countOnes = 0;
+    let countAfterRemove = 0;
 
-        while (zeroCount > k) {
-            if (nums[left] === 0) {
-                zeroCount--;
+    if (nums.includes(0)) {
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] === 1) {
+                countOnes++;
+                countAfterRemove++;
+            } else {
+                maxOnes = Math.max(maxOnes, countAfterRemove);
+                countAfterRemove = countOnes;
+                countOnes = 0;
             }
-            left++;
         }
 
-        result = Math.max(result, right - left + 1);
-    }
+        // Handle the case when the array ends with consecutive 1's
+        maxOnes = Math.max(maxOnes, countAfterRemove);
 
-    return result;
+        return maxOnes;
+    }
+    else {
+        return nums.length - 1;
+    }
 };
