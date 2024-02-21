@@ -1,53 +1,36 @@
-// Longest Subarray of 1's After Deleting One Element
+// Find the Highest Altitude
 // Solved
-// Medium
+// Easy
 // Topics
 // Companies
 // Hint
-// Given a binary array nums, you should delete one element from it.
+// There is a biker going on a road trip. The road trip consists of n + 1 points at different altitudes. The biker starts his trip on point 0 with altitude equal 0.
 
-// Return the size of the longest non - empty subarray containing only 1's in the resulting array. Return 0 if there is no such subarray.
+// You are given an integer array gain of length n where gain[i] is the net gain in altitude between points i​​​​​​ and i + 1 for all (0 <= i < n). Return the highest altitude of a point.
 
-
+ 
 
 // Example 1:
 
-// Input: nums = [1, 1, 0, 1]
-// Output: 3
-// Explanation: After deleting the number in position 2, [1, 1, 1] contains 3 numbers with value of 1's.
+// Input: gain = [-5,1,5,0,-7]
+// Output: 1
+// Explanation: The altitudes are [0,-5,-4,1,1,-6]. The highest is 1.
 // Example 2:
 
-// Input: nums = [0, 1, 1, 1, 0, 1, 1, 0, 1]
-// Output: 5
-// Explanation: After deleting the number in position 4, [0, 1, 1, 1, 1, 1, 0, 1] longest subarray with value of 1's is [1,1,1,1,1].
-// Example 3:
-
-// Input: nums = [1, 1, 1]
-// Output: 2
-// Explanation: You must delete one element.
-var longestSubarray = function (nums) {
-    let maxOnes = 0;
-    let countOnes = 0;
-    let countAfterRemove = 0;
-
-    if (nums.includes(0)) {
-        for (let i = 0; i < nums.length; i++) {
-            if (nums[i] === 1) {
-                countOnes++;
-                countAfterRemove++;
-            } else {
-                maxOnes = Math.max(maxOnes, countAfterRemove);
-                countAfterRemove = countOnes;
-                countOnes = 0;
-            }
-        }
-
-        // Handle the case when the array ends with consecutive 1's
-        maxOnes = Math.max(maxOnes, countAfterRemove);
-
-        return maxOnes;
+// Input: gain = [-4,-3,-2,-1,4,3,2]
+// Output: 0
+// Explanation: The altitudes are [0,-4,-7,-9,-10,-6,-3,-1]. The highest is 0.
+/**
+ * @param {number[]} gain
+ * @return {number}
+ */
+var largestAltitude = function (gain) {
+    let altArr = [0]
+    gain.unshift(0)
+    for (let i = 1; i < gain.length; i++) {
+        let next = gain[i] + altArr[i - 1]
+        altArr.push(next);
     }
-    else {
-        return nums.length - 1;
-    }
+    console.log("alt Arr: ", altArr)
+    return Math.max(...altArr)
 };
