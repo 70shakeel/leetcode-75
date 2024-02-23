@@ -1,69 +1,45 @@
-// Find Pivot Index
+// Find the Difference of Two Arrays
 // Solved
 // Easy
 // Topics
 // Companies
 // Hint
-// Given an array of integers nums, calculate the pivot index of this array.
+// Given two 0 - indexed integer arrays nums1 and nums2, return a list answer of size 2 where:
 
-// The pivot index is the index where the sum of all the numbers strictly to the left of the index is equal to the sum of all the numbers strictly to the index's right.
-
-// If the index is on the left edge of the array, then the left sum is 0 because there are no elements to the left.This also applies to the right edge of the array.
-
-// Return the leftmost pivot index.If no such index exists, return -1.
+// answer[0] is a list of all distinct integers in nums1 which are not present in nums2.
+//     answer[1] is a list of all distinct integers in nums2 which are not present in nums1.
+// Note that the integers in the lists may be returned in any order.
 
 
 
-// Example 1:
+//     Example 1:
 
-// Input: nums = [1, 7, 3, 6, 5, 6]
-// Output: 3
+// Input: nums1 = [1, 2, 3], nums2 = [2, 4, 6]
+// Output: [[1, 3], [4, 6]]
 // Explanation:
-// The pivot index is 3.
-// Left sum = nums[0] + nums[1] + nums[2] = 1 + 7 + 3 = 11
-// Right sum = nums[4] + nums[5] = 5 + 6 = 11
-// Example 2:
+// For nums1, nums1[1] = 2 is present at index 0 of nums2, whereas nums1[0] = 1 and nums1[2] = 3 are not present in nums2.Therefore, answer[0] = [1, 3].
+// For nums2, nums2[0] = 2 is present at index 1 of nums1, whereas nums2[1] = 4 and nums2[2] = 6 are not present in nums2.Therefore, answer[1] = [4, 6].
+//     Example 2:
 
-// Input: nums = [1, 2, 3]
-// Output: -1
+// Input: nums1 = [1, 2, 3, 3], nums2 = [1, 1, 2, 2]
+// Output: [[3], []]
 // Explanation:
-// There is no index that satisfies the conditions in the problem statement.
-//     Example 3:
-
-// Input: nums = [2, 1, -1]
-// Output: 0
-// Explanation:
-// The pivot index is 0.
-// Left sum = 0(no elements to the left of index 0)
-// Right sum = nums[1] + nums[2] = 1 + -1 = 0
+// For nums1, nums1[2] and nums1[3] are not present in nums2.Since nums1[2] == nums1[3], their value is only included once and answer[0] = [3].
+// Every integer in nums2 is present in nums1.Therefore, answer[1] = [].
 /**
- * @param {number[]} nums
- * @return {number}
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[][]}
  */
-var pivotIndex = function (nums) {
-    let pointer = false;
-    let result = 0;
-    for (let i = 0; i < nums.length; i++) {
-        let subArr1 = nums.slice(0, i);
-        let subArr2 = nums.slice(i + 1, nums.length);
-        let sum1 = subArr1.reduce((a, b) => a + b, 0);
-        let sum2 = subArr2.reduce((a, b) => a + b, 0);
-        if (i == 0) {
-            sum1 = 0;
-        }
-        if (i == nums.length - 1) {
-            sum2 = 0;
-        }
-        if (sum1 == sum2) {
-            result = i;
-            pointer = true;
-            break;
-        }
-    }
-    if (pointer == true) {
-        return result;
-    }
-    else {
-        return -1;
-    }
+var findDifference = function (nums1, nums2) {
+    let set1 = new Set(nums1);
+    let set2 = new Set(nums2);
+    set1 = Array.from(set1);
+    set2 = Array.from(set2);
+    let sub1 = set1.filter(item => !set2.includes(item));
+    let sub2 = set2.filter(item => !set1.includes(item));
+    let result = []
+    result.push(sub1);
+    result.push(sub2);
+    return result;
 };
