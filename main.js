@@ -1,50 +1,82 @@
-// Unique Number of Occurrences
-// Solved
-// Easy
-// Topics
-// Companies
-// Hint
-// Given an array of integers arr, return true if the number of occurrences of each value in the array is unique or false otherwise.
+// function closeStrings(word1, word2) {
+//     // Check if the character frequencies are the same
+//     const countChars = str => {
+//         const charCount = {};
+//         for (let char of str) {
+//             charCount[char] = (charCount[char] || 0) + 1;
+//         }
+//         return charCount;
+//     };
 
- 
+//     const charCount1 = countChars(word1);
+//     const charCount2 = countChars(word2);
 
-// Example 1:
+//     const chars1 = Object.keys(charCount1);
+//     const chars2 = Object.keys(charCount2);
 
-// Input: arr = [1,2,2,1,1,3]
-// Output: true
-// Explanation: The value 1 has 3 occurrences, 2 has 2 and 3 has 1. No two values have the same number of occurrences.
-// Example 2:
+//     // Check if the sets of characters are the same
+//     if (chars1.length !== chars2.length || chars1.some(char => !chars2.includes(char))) {
+//         return false;
+//     }
 
-// Input: arr = [1,2]
-// Output: false
-// Example 3:
+//     // Check if the frequencies of character frequencies are the same
+//     const freqCount1 = Object.values(charCount1).reduce((freqCount, freq) => {
+//         freqCount[freq] = (freqCount[freq] || 0) + 1;
+//         return freqCount;
+//     }, {});
 
-// Input: arr = [-3,0,1,-3,1,1,1,-3,10,0]
-// Output: true
-/**
- * @param {number[]} arr
- * @return {boolean}
- */
-var uniqueOccurrences = function (arr) {
-    function countOccurrences(arr1, element) {
-        return arr1.reduce((count, current) => {
-            return current === element ? count + 1 : count;
-        }, 0);
-    }
-    let set = new Set(arr);
-    set = Array.from(set);
-    let occArr = []
-    for (let num = 0; num < set.length; num++) {
-        occArr.push(countOccurrences(arr, set[num]))
-    }
-    occArr = new Set(occArr);
-    occArr = Array.from(occArr);
-    console.log("set", set);
-    console.log("occ arr", occArr);
-    if (occArr.length < set.length) {
+//     const freqCount2 = Object.values(charCount2).reduce((freqCount, freq) => {
+//         freqCount[freq] = (freqCount[freq] || 0) + 1;
+//         return freqCount;
+//     }, {});
+
+//     const freqs1 = Object.keys(freqCount1);
+//     const freqs2 = Object.keys(freqCount2);
+
+//     if (freqs1.length !== freqs2.length || freqs1.some(freq => !freqs2.includes(freq))) {
+//         return false;
+//     }
+
+//     return freqs1.every(freq => freqCount1[freq] === freqCount2[freq]);
+// }
+function closeStrings(word1, word2) {
+    // Check if the character frequencies are the same
+    const countChars = str => {
+        const charCount = {};
+        for (let char of str) {
+            charCount[char] = (charCount[char] || 0) + 1;
+        }
+        return charCount;
+    };
+
+    const charCount1 = countChars(word1);
+    const charCount2 = countChars(word2);
+
+    const chars1 = Object.keys(charCount1);
+    const chars2 = Object.keys(charCount2);
+
+    // Check if the sets of characters are the same
+    if (chars1.length !== chars2.length || chars1.some(char => !chars2.includes(char))) {
         return false;
     }
-    else {
-        return true;
+
+    // Check if the frequencies of character frequencies are the same
+    const freqCount1 = Object.values(charCount1).reduce((freqCount, freq) => {
+        freqCount[freq] = (freqCount[freq] || 0) + 1;
+        return freqCount;
+    }, {});
+
+    const freqCount2 = Object.values(charCount2).reduce((freqCount, freq) => {
+        freqCount[freq] = (freqCount[freq] || 0) + 1;
+        return freqCount;
+    }, {});
+
+    const freqs1 = Object.keys(freqCount1);
+    const freqs2 = Object.keys(freqCount2);
+
+    if (freqs1.length !== freqs2.length || freqs1.some(freq => !freqs2.includes(freq))) {
+        return false;
     }
-};
+
+    return freqs1.every(freq => freqCount1[freq] === freqCount2[freq]);
+}
