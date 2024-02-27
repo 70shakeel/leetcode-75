@@ -1,56 +1,45 @@
-// Equal Row and Column Pairs
+// Removing Stars From a String
 // Solved
 // Medium
 // Topics
 // Companies
 // Hint
-// Given a 0 - indexed n x n integer matrix grid, return the number of pairs(ri, cj) such that row ri and column cj are equal.
+// You are given a string s, which contains stars *.
 
-// A row and column pair is considered equal if they contain the same elements in the same order(i.e., an equal array).
+// In one operation, you can:
 
+// Choose a star in s.
+// Remove the closest non - star character to its left, as well as remove the star itself.
+// Return the string after all stars have been removed.
+
+//     Note:
+
+// The input will be generated such that the operation is always possible.
+// It can be shown that the resulting string will always be unique.
 
 
 //     Example 1:
 
+// Input: s = "leet**cod*e"
+// Output: "lecoe"
+// Explanation: Performing the removals from left to right:
+// - The closest character to the 1st star is 't' in "leet**cod*e".s becomes "lee*cod*e".
+// - The closest character to the 2nd star is 'e' in "lee*cod*e".s becomes "lecod*e".
+// - The closest character to the 3rd star is 'd' in "lecod*e".s becomes "lecoe".
+// There are no more stars, so we return "lecoe".
+//     Example 2:
 
-// Input: grid = [[3, 2, 1], [1, 7, 6], [2, 7, 7]]
-// Output: 1
-// Explanation: There is 1 equal row and column pair:
-// - (Row 2, Column 1): [2, 7, 7]
-// Example 2:
-
-
-// Input: grid = [[3, 1, 2, 2], [1, 4, 4, 5], [2, 4, 2, 2], [2, 4, 2, 2]]
-// Output: 3
-// Explanation: There are 3 equal row and column pairs:
-// - (Row 0, Column 0): [3, 1, 2, 2]
-//     - (Row 2, Column 2): [2, 4, 2, 2]
-//         - (Row 3, Column 2): [2, 4, 2, 2]
-/**
- * @param {number[][]} grid
- * @return {number}
- */
-var equalPairs = function (grid) {
-    function isEqualRowColumnPair(grid, row, col) {
-        const n = grid.length;
-        for (let i = 0; i < n; i++) {
-            if (grid[row][i] !== grid[i][col]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    let count = 0;
-    const n = grid.length;
-
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            if (isEqualRowColumnPair(grid, i, j)) {
-                count++;
-            }
+// Input: s = "erase*****"
+// Output: ""
+// Explanation: The entire string is removed, so we return an empty string.
+var removeStars = function (s) {
+    const stack = [];
+    for (let char of s) {
+        if (char !== '*') {
+            stack.push(char);
+        } else if (stack.length > 0) {
+            stack.pop();
         }
     }
-
-    return count;
-
+    return stack.join('');
 };
