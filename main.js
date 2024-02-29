@@ -1,61 +1,57 @@
-// Asteroid Collision
+// Decode String
 // Solved
 // Medium
 // Topics
 // Companies
-// Hint
-// We are given an array asteroids of integers representing asteroids in a row.
+// Given an encoded string, return its decoded string.
 
-// For each asteroid, the absolute value represents its size, and the sign represents its direction(positive meaning right, negative meaning left).Each asteroid moves at the same speed.
+// The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times.Note that k is guaranteed to be a positive integer.
 
-// Find out the state of the asteroids after all collisions.If two asteroids meet, the smaller one will explode.If both are the same size, both will explode.Two asteroids moving in the same direction will never meet.
+// You may assume that the input string is always valid; there are no extra white spaces, square brackets are well - formed, etc.Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k.For example, there will not be input like 3a or 2[4].
+
+// The test cases are generated so that the length of the output will never exceed 105.
 
 
 
-//     Example 1:
+// Example 1:
 
-// Input: asteroids = [5, 10, -5]
-// Output: [5, 10]
-// Explanation: The 10 and - 5 collide resulting in 10. The 5 and 10 never collide.
-//     Example 2:
+// Input: s = "3[a]2[bc]"
+// Output: "aaabcbc"
+// Example 2:
 
-// Input: asteroids = [8, -8]
-// Output: []
-// Explanation: The 8 and - 8 collide exploding each other.
-//     Example 3:
+// Input: s = "3[a2[c]]"
+// Output: "accaccacc"
+// Example 3:
 
-// Input: asteroids = [10, 2, -5]
-// Output: [10]
-// Explanation: The 2 and - 5 collide resulting in -5. The 10 and - 5 collide resulting in 10.
+// Input: s = "2[abc]3[cd]ef"
+// Output: "abcabccdcdcdef"
 /**
- * @param {number[]} asteroids
- * @return {number[]}
+ * @param {string} s
+ * @return {string}
  */
-var asteroidCollision = function (asteroids) {
-    const stack = [];
-    for (const asteroid of asteroids) {
-        if (asteroid > 0 || stack.length === 0) {
-            stack.push(asteroid);
+var decodeString = function (s) {
+    let stack = [];
+    let currentString = "";
+    let repetitionFactor = 0;
+
+    for (let i = 0; i < s.length; i++) {
+        let char = s.charAt(i);
+
+        if (char === '[') {
+            stack.push(currentString);
+            stack.push(repetitionFactor);
+            currentString = "";
+            repetitionFactor = 0;
+        } else if (char === ']') {
+            let factor = stack.pop();
+            let prevString = stack.pop();
+            currentString = prevString + currentString.repeat(factor);
+        } else if (isNaN(char)) {
+            currentString += char;
         } else {
-            while (true) {
-                const prev = stack[stack.length - 1];
-                if (prev < 0) {
-                    stack.push(asteroid);
-                    break;
-                } else if (prev === -asteroid) {
-                    stack.pop();
-                    break;
-                } else if (prev > -asteroid) {
-                    break;
-                } else {
-                    stack.pop();
-                    if (stack.length === 0) {
-                        stack.push(asteroid);
-                        break;
-                    }
-                }
-            }
+            repetitionFactor = repetitionFactor * 10 + parseInt(char);
         }
     }
-    return stack;
+
+    return currentString;
 }
