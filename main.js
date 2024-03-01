@@ -1,57 +1,41 @@
-// Decode String
-// Solved
-// Medium
+// Number of Recent Calls
+// Easy
 // Topics
 // Companies
-// Given an encoded string, return its decoded string.
+// You have a RecentCounter class which counts the number of recent requests within a certain time frame.
 
-// The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times.Note that k is guaranteed to be a positive integer.
+// Implement the RecentCounter class:
 
-// You may assume that the input string is always valid; there are no extra white spaces, square brackets are well - formed, etc.Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k.For example, there will not be input like 3a or 2[4].
+// RecentCounter() Initializes the counter with zero recent requests.
+// int ping(int t) Adds a new request at time t, where t represents some time in milliseconds, and returns the number of requests that has happened in the past 3000 milliseconds(including the new request).Specifically, return the number of requests that have happened in the inclusive range[t - 3000, t].
+// It is guaranteed that every call to ping uses a strictly larger value of t than the previous call.
 
-// The test cases are generated so that the length of the output will never exceed 105.
 
 
+//     Example 1:
 
-// Example 1:
+// Input
+// ["RecentCounter", "ping", "ping", "ping", "ping"]
+// [[], [1], [100], [3001], [3002]]
+// Output
+// [null, 1, 2, 3, 3]
 
-// Input: s = "3[a]2[bc]"
-// Output: "aaabcbc"
-// Example 2:
-
-// Input: s = "3[a2[c]]"
-// Output: "accaccacc"
-// Example 3:
-
-// Input: s = "2[abc]3[cd]ef"
-// Output: "abcabccdcdcdef"
-/**
- * @param {string} s
- * @return {string}
- */
-var decodeString = function (s) {
-    let stack = [];
-    let currentString = "";
-    let repetitionFactor = 0;
-
-    for (let i = 0; i < s.length; i++) {
-        let char = s.charAt(i);
-
-        if (char === '[') {
-            stack.push(currentString);
-            stack.push(repetitionFactor);
-            currentString = "";
-            repetitionFactor = 0;
-        } else if (char === ']') {
-            let factor = stack.pop();
-            let prevString = stack.pop();
-            currentString = prevString + currentString.repeat(factor);
-        } else if (isNaN(char)) {
-            currentString += char;
-        } else {
-            repetitionFactor = repetitionFactor * 10 + parseInt(char);
-        }
+// Explanation
+// RecentCounter recentCounter = new RecentCounter();
+// recentCounter.ping(1);     // requests = [1], range is [-2999,1], return 1
+// recentCounter.ping(100);   // requests = [1, 100], range is [-2900,100], return 2
+// recentCounter.ping(3001);  // requests = [1, 100, 3001], range is [1,3001], return 3
+// recentCounter.ping(3002);  // requests = [1, 100, 3001, 3002], range is [2,3002], return 3
+class RecentCounter {
+    constructor() {
+        this.requests = [];
     }
 
-    return currentString;
+    ping(t) {
+        this.requests.push(t);
+        while (this.requests[0] < t - 3000) {
+            this.requests.shift();
+        }
+        return this.requests.length;
+    }
 }
