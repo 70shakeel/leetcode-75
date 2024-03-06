@@ -1,69 +1,63 @@
-// Reverse Linked List
+//  Maximum Twin Sum of a Linked List
 // Solved
-// Easy
+// Medium
 // Topics
 // Companies
-// Given the head of a singly linked list, reverse the list, and return the reversed list.
+// Hint
+// In a linked list of size n, where n is even, the ith node(0 - indexed) of the linked list is known as the twin of the(n - 1 - i)th node, if 0 <= i <= (n / 2) - 1.
+
+// For example, if n = 4, then node 0 is the twin of node 3, and node 1 is the twin of node 2. These are the only nodes with twins for n = 4.
+// The twin sum is defined as the sum of a node and its twin.
+
+// Given the head of a linked list with even length, return the maximum twin sum of the linked list.
 
 
 
 //     Example 1:
 
 
-// Input: head = [1, 2, 3, 4, 5]
-// Output: [5, 4, 3, 2, 1]
+// Input: head = [5, 4, 2, 1]
+// Output: 6
+// Explanation:
+// Nodes 0 and 1 are the twins of nodes 3 and 2, respectively.All have twin sum = 6.
+// There are no other nodes with twins in the linked list.
+//     Thus, the maximum twin sum of the linked list is 6. 
 // Example 2:
 
 
-// Input: head = [1, 2]
-// Output: [2, 1]
+// Input: head = [4, 2, 2, 3]
+// Output: 7
+// Explanation:
+// The nodes with twins present in this linked list are:
+// - Node 0 is the twin of node 3 having a twin sum of 4 + 3 = 7.
+//     - Node 1 is the twin of node 2 having a twin sum of 2 + 2 = 4.
+// Thus, the maximum twin sum of the linked list is max(7, 4) = 7. 
 // Example 3:
 
-// Input: head = []
-// Output: []
-class ListNode {
-    constructor(val = 0, next = null) {
-        this.val = val;
-        this.next = next;
+
+// Input: head = [1, 100000]
+// Output: 100001
+// Explanation:
+// There is only one node with a twin in the linked list having twin sum of 1 + 100000 = 100001.
+function pairSum(head) {
+    let current = head;
+    let twinSum = 0;
+    let maxSum = 0;
+    let length = 0;
+    let hash = {};
+
+    // Find the length of the linked list and store node values in hash table
+    while (current !== null) {
+        hash[length] = current.val;
+        length++;
+        current = current.next;
     }
+
+    // Iterate through the first half of the linked list
+    for (let i = 0; i < length / 2; i++) {
+        twinSum = hash[i] + hash[length - 1 - i]; // Calculate twin sum
+        maxSum = Math.max(maxSum, twinSum); // Update maxSum if twinSum is greater
+    }
+
+    return maxSum;
 }
-
-const reverseList = (head) => {
-    let prev = null;
-    let current = head;
-
-    while (current !== null) {
-        let nextTemp = current.next;
-        current.next = prev;
-        prev = current;
-        current = nextTemp;
-    }
-
-    return prev;
-};
-
-// Helper function to convert an array to a linked list
-const arrayToLinkedList = (arr) => {
-    let head = new ListNode();
-    let current = head;
-
-    for (let i = 0; i < arr.length; i++) {
-        current.next = new ListNode(arr[i]);
-        current = current.next;
-    }
-
-    return head.next;
-};
-
-// Helper function to convert a linked list to an array
-const linkedListToArray = (head) => {
-    let arr = [];
-    let current = head;
-
-    while (current !== null) {
-        arr.push(current.val);
-        current = current.next;
-    }
-
-    return arr;
-};
