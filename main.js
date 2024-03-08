@@ -1,49 +1,49 @@
-// Maximum Depth of Binary Tree
-// Solved
+// Leaf - Similar Trees
 // Easy
 // Topics
 // Companies
-// Given the root of a binary tree, return its maximum depth.
-
-// A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+// Consider all the leaves of a binary tree, from left to right order, the values of those leaves form a leaf value sequence.
 
 
 
-// Example 1:
+// For example, in the given tree above, the leaf value sequence is(6, 7, 4, 9, 8).
+
+// Two binary trees are considered leaf - similar if their leaf value sequence is the same.
+
+// Return true if and only if the two given trees with head nodes root1 and root2 are leaf - similar.
 
 
-// Input: root = [3, 9, 20, null, null, 15, 7]
-// Output: 3
+
+//     Example 1:
+
+
+// Input: root1 = [3, 5, 1, 6, 2, 9, 8, null, null, 7, 4], root2 = [3, 5, 1, 6, 7, 4, 2, null, null, null, null, null, null, 9, 8]
+// Output: true
 // Example 2:
 
-// Input: root = [1, null, 2]
-// Output: 2
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {number}
- */
-function TreeNode(val, left, right) {
-    this.val = (val === undefined ? 0 : val)
-    this.left = (left === undefined ? null : left)
-    this.right = (right === undefined ? null : right)
-}
 
-function maxDepth(root) {
-    if (!root) {
-        return 0;
+// Input: root1 = [1, 2, 3], root2 = [1, 3, 2]
+// Output: false
+function leafSimilar(root1, root2) {
+    // Helper function to perform DFS and collect leaf values
+    function dfs(node, leaves) {
+        if (!node) return;
+        if (!node.left && !node.right) {
+            leaves.push(node.val);
+            return;
+        }
+        dfs(node.left, leaves);
+        dfs(node.right, leaves);
     }
 
-    let leftDepth = maxDepth(root.left);
-    let rightDepth = maxDepth(root.right);
+    // Initialize arrays to store leaf values
+    let leaves1 = [];
+    let leaves2 = [];
 
-    return Math.max(leftDepth, rightDepth) + 1;
+    // Perform DFS on both trees
+    dfs(root1, leaves1);
+    dfs(root2, leaves2);
+
+    // Compare the leaf value sequences
+    return leaves1.join(',') === leaves2.join(',');
 }
-// checking commit username
