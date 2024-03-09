@@ -1,49 +1,36 @@
-// Leaf - Similar Trees
-// Easy
-// Topics
-// Companies
-// Consider all the leaves of a binary tree, from left to right order, the values of those leaves form a leaf value sequence.
+// function goodNodes(root) {
+//     // Helper function to perform DFS
+//     function dfs(node, maxSoFar) {
+//         if (!node) return 0;
 
+//         // Check if the current node is a good node
+//         let count = node.val >= maxSoFar ? 1 : 0;
 
+//         // Update the maximum value seen so far
+//         maxSoFar = Math.max(maxSoFar, node.val);
 
-// For example, in the given tree above, the leaf value sequence is(6, 7, 4, 9, 8).
+//         // Recursively check the left and right subtrees
+//         return count + dfs(node.left, maxSoFar) + dfs(node.right, maxSoFar);
+//     }
 
-// Two binary trees are considered leaf - similar if their leaf value sequence is the same.
+//     // Start DFS from the root with a minimum value of -Infinity
+//     return dfs(root, -Infinity);
+// }
+function goodNodes(root) {
+    // Helper function to perform DFS
+    function dfs(node, maxSoFar) {
+        if (!node) return 0;
 
-// Return true if and only if the two given trees with head nodes root1 and root2 are leaf - similar.
+        // Check if the current node is a good node
+        let count = node.val >= maxSoFar ? 1 : 0;
 
+        // Update the maximum value seen so far
+        maxSoFar = Math.max(maxSoFar, node.val);
 
-
-//     Example 1:
-
-
-// Input: root1 = [3, 5, 1, 6, 2, 9, 8, null, null, 7, 4], root2 = [3, 5, 1, 6, 7, 4, 2, null, null, null, null, null, null, 9, 8]
-// Output: true
-// Example 2:
-
-
-// Input: root1 = [1, 2, 3], root2 = [1, 3, 2]
-// Output: false
-function leafSimilar(root1, root2) {
-    // Helper function to perform DFS and collect leaf values
-    function dfs(node, leaves) {
-        if (!node) return;
-        if (!node.left && !node.right) {
-            leaves.push(node.val);
-            return;
-        }
-        dfs(node.left, leaves);
-        dfs(node.right, leaves);
+        // Recursively check the left and right subtrees
+        return count + dfs(node.left, maxSoFar) + dfs(node.right, maxSoFar);
     }
 
-    // Initialize arrays to store leaf values
-    let leaves1 = [];
-    let leaves2 = [];
-
-    // Perform DFS on both trees
-    dfs(root1, leaves1);
-    dfs(root2, leaves2);
-
-    // Compare the leaf value sequences
-    return leaves1.join(',') === leaves2.join(',');
+    // Start DFS from the root with a minimum value of -Infinity
+    return dfs(root, -Infinity);
 }
