@@ -1,23 +1,40 @@
-// Path Sum III
-// Medium
-// Topics
-// Companies
-// Given the root of a binary tree and an integer targetSum, return the number of paths where the sum of the values along the path equals targetSum.
 
-// The path does not need to start or end at the root or a leaf, but it must go downwards(i.e., traveling only from parent nodes to child nodes).
+Longest ZigZag Path in a Binary Tree
+Medium
+Topics
+Companies
+Hint
+You are given the root of a binary tree.
+
+A ZigZag path for a binary tree is defined as follow:
+
+Choose any node in the binary tree and a direction(right or left).
+If the current direction is right, move to the right child of the current node; otherwise, move to the left child.
+Change the direction from right to left or from left to right.
+Repeat the second and third steps until you can't move in the tree.
+Zigzag length is defined as the number of nodes visited - 1.(A single node has a length of 0).
+
+Return the longest ZigZag path contained in that tree.
 
 
 
-//     Example 1:
+    Example 1:
 
 
-// Input: root = [10, 5, -3, 3, 2, null, 11, 3, -2, null, 1], targetSum = 8
-// Output: 3
-// Explanation: The paths that sum to 8 are shown.
-//     Example 2:
+Input: root = [1, null, 1, 1, 1, null, null, 1, 1, null, 1, null, null, null, 1]
+Output: 3
+Explanation: Longest ZigZag path in blue nodes(right -> left -> right).
+    Example 2:
 
-// Input: root = [5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1], targetSum = 22
-// Output: 3
+
+Input: root = [1, 1, 1, null, 1, null, null, 1, 1, null, 1]
+Output: 4
+Explanation: Longest ZigZag path in blue nodes(left -> right -> left -> right).
+    Example 3:
+
+Input: root = [1]
+Output: 0
+
 class TreeNode {
     constructor(val = 0, left = null, right = null) {
         this.val = val;
@@ -26,22 +43,26 @@ class TreeNode {
     }
 }
 
-const pathSum = (root, targetSum) => {
+const longestZigZag = (root) => {
     if (!root) return 0;
 
-    const dfs = (node, target) => {
-        if (!node) return 0;
+    let maxZigZag = 0;
 
-        let count = 0;
-        if (node.val === target) {
-            count++;
+    const dfs = (node, leftLength, rightLength) => {
+        if (!node) return;
+
+        maxZigZag = Math.max(maxZigZag, leftLength, rightLength);
+
+        if (node.left) {
+            dfs(node.left, rightLength + 1, 0);
         }
 
-        count += dfs(node.left, target - node.val);
-        count += dfs(node.right, target - node.val);
-
-        return count;
+        if (node.right) {
+            dfs(node.right, 0, leftLength + 1);
+        }
     };
 
-    return dfs(root, targetSum) + pathSum(root.left, targetSum) + pathSum(root.right, targetSum);
+    dfs(root, 0, 0);
+
+    return maxZigZag;
 };
