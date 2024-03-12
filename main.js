@@ -1,39 +1,29 @@
+// Lowest Common Ancestor of a Binary Tree
+// Medium
+// Topics
+// Companies
+// Given a binary tree, find the lowest common ancestor(LCA) of two given nodes in the tree.
 
-Longest ZigZag Path in a Binary Tree
-Medium
-Topics
-Companies
-Hint
-You are given the root of a binary tree.
-
-A ZigZag path for a binary tree is defined as follow:
-
-Choose any node in the binary tree and a direction(right or left).
-If the current direction is right, move to the right child of the current node; otherwise, move to the left child.
-Change the direction from right to left or from left to right.
-Repeat the second and third steps until you can't move in the tree.
-Zigzag length is defined as the number of nodes visited - 1.(A single node has a length of 0).
-
-Return the longest ZigZag path contained in that tree.
+// According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
 
 
 
-    Example 1:
+// Example 1:
 
 
-Input: root = [1, null, 1, 1, 1, null, null, 1, 1, null, 1, null, null, null, 1]
-Output: 3
-Explanation: Longest ZigZag path in blue nodes(right -> left -> right).
-    Example 2:
+// Input: root = [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], p = 5, q = 1
+// Output: 3
+// Explanation: The LCA of nodes 5 and 1 is 3.
+// Example 2:
 
 
-Input: root = [1, 1, 1, null, 1, null, null, 1, 1, null, 1]
-Output: 4
-Explanation: Longest ZigZag path in blue nodes(left -> right -> left -> right).
-    Example 3:
+// Input: root = [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], p = 5, q = 4
+// Output: 5
+// Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+//     Example 3:
 
-Input: root = [1]
-Output: 0
+// Input: root = [1, 2], p = 1, q = 2
+// Output: 1
 
 class TreeNode {
     constructor(val = 0, left = null, right = null) {
@@ -43,26 +33,12 @@ class TreeNode {
     }
 }
 
-const longestZigZag = (root) => {
-    if (!root) return 0;
+const lowestCommonAncestor = (root, p, q) => {
+    if (!root || root === p || root === q) return root;
 
-    let maxZigZag = 0;
+    const left = lowestCommonAncestor(root.left, p, q);
+    const right = lowestCommonAncestor(root.right, p, q);
 
-    const dfs = (node, leftLength, rightLength) => {
-        if (!node) return;
-
-        maxZigZag = Math.max(maxZigZag, leftLength, rightLength);
-
-        if (node.left) {
-            dfs(node.left, rightLength + 1, 0);
-        }
-
-        if (node.right) {
-            dfs(node.right, 0, leftLength + 1);
-        }
-    };
-
-    dfs(root, 0, 0);
-
-    return maxZigZag;
+    if (left && right) return root;
+    return left || right;
 };
