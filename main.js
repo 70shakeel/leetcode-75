@@ -1,24 +1,28 @@
-// Binary Tree Right Side View
+// Maximum Level Sum of a Binary Tree
 // Medium
 // Topics
 // Companies
-// Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+// Hint
+// Given the root of a binary tree, the level of its root is 1, the level of its children is 2, and so on.
+
+// Return the smallest level x such that the sum of all the values of nodes at level x is maximal.
 
 
 
 //     Example 1:
 
 
-// Input: root = [1, 2, 3, null, 5, null, 4]
-// Output: [1, 3, 4]
+// Input: root = [1, 7, 0, 7, -8, null, null]
+// Output: 2
+// Explanation: 
+// Level 1 sum = 1.
+// Level 2 sum = 7 + 0 = 7.
+// Level 3 sum = 7 + -8 = -1.
+// So we return the level with the maximum sum which is level 2.
 // Example 2:
 
-// Input: root = [1, null, 3]
-// Output: [1, 3]
-// Example 3:
-
-// Input: root = []
-// Output: []
+// Input: root = [989, null, 10250, 98693, -89388, null, null, null, -32127]
+// Output: 2
 class TreeNode {
     constructor(val = 0, left = null, right = null) {
         this.val = val;
@@ -27,25 +31,33 @@ class TreeNode {
     }
 }
 
-var rightSideView = function (root) {
-    if (!root) return [];
+var maxLevelSum = function (root) {
+    if (!root) return 0;
 
-    const result = [];
-    const queue = [root];
+    let maxSum = -Infinity;
+    let result = 0;
+
+    let queue = [root];
+    let level = 1;
 
     while (queue.length > 0) {
-        const levelSize = queue.length;
-        let lastNodeValue = null;
+        let size = queue.length;
+        let sum = 0;
 
-        for (let i = 0; i < levelSize; i++) {
-            const node = queue.shift();
-            lastNodeValue = node.val;
+        for (let i = 0; i < size; i++) {
+            let node = queue.shift();
+            sum += node.val;
 
             if (node.left) queue.push(node.left);
             if (node.right) queue.push(node.right);
         }
 
-        result.push(lastNodeValue);
+        if (sum > maxSum) {
+            maxSum = sum;
+            result = level;
+        }
+
+        level++;
     }
 
     return result;
