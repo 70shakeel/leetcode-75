@@ -1,22 +1,32 @@
-// Search in a Binary Search Tree
-// Easy
+// Delete Node in a BST
+// Medium
 // Topics
 // Companies
-// You are given the root of a binary search tree(BST) and an integer val.
+// Given a root node reference of a BST and a key, delete the node with the given key in the BST.Return the root node reference(possibly updated) of the BST.
 
-// Find the node in the BST that the node's value equals val and return the subtree rooted with that node. If such a node does not exist, return null.
+//     Basically, the deletion can be divided into two stages:
+
+// Search for a node to remove.
+// If the node is found, delete the node.
 
 
+//     Example 1:
 
-// Example 1:
 
+// Input: root = [5, 3, 6, 2, 4, null, 7], key = 3
+// Output: [5, 4, 6, 2, null, null, 7]
+// Explanation: Given key to delete is 3. So we find the node with value 3 and delete it.
+// One valid answer is[5, 4, 6, 2, null, null, 7], shown in the above BST.
+// Please notice that another valid answer is[5, 2, 6, null, 4, null, 7] and it's also accepted.
 
-// Input: root = [4, 2, 7, 1, 3], val = 2
-// Output: [2, 1, 3]
 // Example 2:
 
+// Input: root = [5, 3, 6, 2, 4, null, 7], key = 0
+// Output: [5, 3, 6, 2, 4, null, 7]
+// Explanation: The tree does not contain a node with value = 0.
+// Example 3:
 
-// Input: root = [4, 2, 7, 1, 3], val = 5
+// Input: root = [], key = 0
 // Output: []
 class TreeNode {
     constructor(val = 0, left = null, right = null) {
@@ -26,18 +36,28 @@ class TreeNode {
     }
 }
 
-var searchBST = function (root, val) {
-    if (!root) {
-        return null;
-    }
+const deleteNode = (root, key) => {
+    if (!root) return null;
 
-    if (root.val === val) {
-        return root;
-    }
-
-    if (val < root.val) {
-        return searchBST(root.left, val);
+    if (key < root.val) {
+        root.left = deleteNode(root.left, key);
+    } else if (key > root.val) {
+        root.right = deleteNode(root.right, key);
     } else {
-        return searchBST(root.right, val);
+        if (!root.left) return root.right;
+        if (!root.right) return root.left;
+
+        let minNode = findMin(root.right);
+        root.val = minNode.val;
+        root.right = deleteNode(root.right, minNode.val);
     }
+
+    return root;
+};
+
+const findMin = (node) => {
+    while (node.left) {
+        node = node.left;
+    }
+    return node;
 };
