@@ -1,63 +1,44 @@
-// Delete Node in a BST
+// Keys and Rooms
 // Medium
 // Topics
 // Companies
-// Given a root node reference of a BST and a key, delete the node with the given key in the BST.Return the root node reference(possibly updated) of the BST.
+// There are n rooms labeled from 0 to n - 1 and all the rooms are locked except for room 0. Your goal is to visit all the rooms.However, you cannot enter a locked room without having its key.
 
-//     Basically, the deletion can be divided into two stages:
+// When you visit a room, you may find a set of distinct keys in it.Each key has a number on it, denoting which room it unlocks, and you can take all of them with you to unlock the other rooms.
 
-// Search for a node to remove.
-// If the node is found, delete the node.
+// Given an array rooms where rooms[i] is the set of keys that you can obtain if you visited room i, return true if you can visit all the rooms, or false otherwise.
+
 
 
 //     Example 1:
 
+// Input: rooms = [[1], [2], [3], []]
+// Output: true
+// Explanation: 
+// We visit room 0 and pick up key 1.
+// We then visit room 1 and pick up key 2.
+// We then visit room 2 and pick up key 3.
+// We then visit room 3.
+// Since we were able to visit every room, we return true.
+//     Example 2:
 
-// Input: root = [5, 3, 6, 2, 4, null, 7], key = 3
-// Output: [5, 4, 6, 2, null, null, 7]
-// Explanation: Given key to delete is 3. So we find the node with value 3 and delete it.
-// One valid answer is[5, 4, 6, 2, null, null, 7], shown in the above BST.
-// Please notice that another valid answer is[5, 2, 6, null, 4, null, 7] and it's also accepted.
+// Input: rooms = [[1, 3], [3, 0, 1], [2], [0]]
+// Output: false
+// Explanation: We can not enter room number 2 since the only key that unlocks it is in that room.
+const canVisitAllRooms = (rooms) => {
+    const visited = new Set();
+    const stack = [0]; // Start from room 0
 
-// Example 2:
+    while (stack.length > 0) {
+        const currentRoom = stack.pop();
+        visited.add(currentRoom);
 
-// Input: root = [5, 3, 6, 2, 4, null, 7], key = 0
-// Output: [5, 3, 6, 2, 4, null, 7]
-// Explanation: The tree does not contain a node with value = 0.
-// Example 3:
-
-// Input: root = [], key = 0
-// Output: []
-class TreeNode {
-    constructor(val = 0, left = null, right = null) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
-const deleteNode = (root, key) => {
-    if (!root) return null;
-
-    if (key < root.val) {
-        root.left = deleteNode(root.left, key);
-    } else if (key > root.val) {
-        root.right = deleteNode(root.right, key);
-    } else {
-        if (!root.left) return root.right;
-        if (!root.right) return root.left;
-
-        let minNode = findMin(root.right);
-        root.val = minNode.val;
-        root.right = deleteNode(root.right, minNode.val);
+        for (const key of rooms[currentRoom]) {
+            if (!visited.has(key)) {
+                stack.push(key);
+            }
+        }
     }
 
-    return root;
-};
-
-const findMin = (node) => {
-    while (node.left) {
-        node = node.left;
-    }
-    return node;
+    return visited.size === rooms.length;
 };
