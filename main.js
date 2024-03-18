@@ -1,44 +1,47 @@
-// Keys and Rooms
+// Number of Provinces
 // Medium
 // Topics
 // Companies
-// There are n rooms labeled from 0 to n - 1 and all the rooms are locked except for room 0. Your goal is to visit all the rooms.However, you cannot enter a locked room without having its key.
+// There are n cities.Some of them are connected, while some are not.If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
 
-// When you visit a room, you may find a set of distinct keys in it.Each key has a number on it, denoting which room it unlocks, and you can take all of them with you to unlock the other rooms.
+// A province is a group of directly or indirectly connected cities and no other cities outside of the group.
 
-// Given an array rooms where rooms[i] is the set of keys that you can obtain if you visited room i, return true if you can visit all the rooms, or false otherwise.
+// You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+
+// Return the total number of provinces.
 
 
 
 //     Example 1:
 
-// Input: rooms = [[1], [2], [3], []]
-// Output: true
-// Explanation: 
-// We visit room 0 and pick up key 1.
-// We then visit room 1 and pick up key 2.
-// We then visit room 2 and pick up key 3.
-// We then visit room 3.
-// Since we were able to visit every room, we return true.
-//     Example 2:
 
-// Input: rooms = [[1, 3], [3, 0, 1], [2], [0]]
-// Output: false
-// Explanation: We can not enter room number 2 since the only key that unlocks it is in that room.
-const canVisitAllRooms = (rooms) => {
-    const visited = new Set();
-    const stack = [0]; // Start from room 0
+// Input: isConnected = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
+// Output: 2
+// Example 2:
 
-    while (stack.length > 0) {
-        const currentRoom = stack.pop();
-        visited.add(currentRoom);
 
-        for (const key of rooms[currentRoom]) {
-            if (!visited.has(key)) {
-                stack.push(key);
+// Input: isConnected = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+// Output: 3
+const findCircleNum = (isConnected) => {
+    const n = isConnected.length;
+    const visited = new Array(n).fill(false);
+    let provinces = 0;
+
+    const dfs = (i) => {
+        visited[i] = true;
+        for (let j = 0; j < n; j++) {
+            if (isConnected[i][j] === 1 && !visited[j]) {
+                dfs(j);
             }
+        }
+    };
+
+    for (let i = 0; i < n; i++) {
+        if (!visited[i]) {
+            provinces++;
+            dfs(i);
         }
     }
 
-    return visited.size === rooms.length;
+    return provinces;
 };
