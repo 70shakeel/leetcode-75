@@ -1,47 +1,59 @@
-// Number of Provinces
+// Reorder Routes to Make All Paths Lead to the City Zero
 // Medium
 // Topics
 // Companies
-// There are n cities.Some of them are connected, while some are not.If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
+// Hint
+// There are n cities numbered from 0 to n - 1 and n - 1 roads such that there is only one way to travel between two different cities(this network form a tree).Last year, The ministry of transport decided to orient the roads in one direction because they are too narrow.
 
-// A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+// Roads are represented by connections where connections[i] = [ai, bi] represents a road from city ai to city bi.
 
-// You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+// This year, there will be a big event in the capital(city 0), and many people want to travel to this city.
 
-// Return the total number of provinces.
+// Your task consists of reorienting some roads such that each city can visit the city 0. Return the minimum number of edges changed.
 
-
-
-//     Example 1:
-
-
-// Input: isConnected = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
-// Output: 2
-// Example 2:
+//     It's guaranteed that each city can reach city 0 after reorder.
 
 
-// Input: isConnected = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+// Example 1:
+
+
+// Input: n = 6, connections = [[0, 1], [1, 3], [2, 3], [4, 0], [4, 5]]
 // Output: 3
-const findCircleNum = (isConnected) => {
-    const n = isConnected.length;
-    const visited = new Array(n).fill(false);
-    let provinces = 0;
+// Explanation: Change the direction of edges show in red such that each node can reach the node 0(capital).
+//     Example 2:
 
-    const dfs = (i) => {
-        visited[i] = true;
-        for (let j = 0; j < n; j++) {
-            if (isConnected[i][j] === 1 && !visited[j]) {
-                dfs(j);
+
+// Input: n = 5, connections = [[1, 0], [1, 2], [3, 2], [3, 4]]
+// Output: 2
+// Explanation: Change the direction of edges show in red such that each node can reach the node 0(capital).
+//     Example 3:
+
+// Input: n = 3, connections = [[1, 0], [2, 0]]
+// Output: 0
+const minReorder = (n, connections) => {
+    const graph = new Map();
+    const visited = new Set();
+    let count = 0;
+
+    for (const [from, to] of connections) {
+        if (!graph.has(from)) graph.set(from, []);
+        if (!graph.has(to)) graph.set(to, []);
+        graph.get(from).push(to); // outgoing edge
+        graph.get(to).push(-from); // incoming edge
+    }
+
+    const dfs = (node) => {
+        visited.add(node);
+        for (const nei of graph.get(node)) {
+            if (!visited.has(Math.abs(nei))) {
+                if (nei > 0) count++; // increment count for outgoing edge
+                dfs(Math.abs(nei));
             }
         }
     };
 
-    for (let i = 0; i < n; i++) {
-        if (!visited[i]) {
-            provinces++;
-            dfs(i);
-        }
-    }
+    dfs(0); // Start DFS from city 0
 
-    return provinces;
+    return count;
 };
