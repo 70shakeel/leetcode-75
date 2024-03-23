@@ -1,68 +1,102 @@
-// Rotting Oranges
+// Kth Largest Element in an Array
 // Medium
 // Topics
 // Companies
-// You are given an m x n grid where each cell can have one of three values:
+// Given an integer array nums and an integer k, return the kth largest element in the array.
 
-// 0 representing an empty cell,
-//     1 representing a fresh orange, or
-// 2 representing a rotten orange.
-// Every minute, any fresh orange that is 4 - directionally adjacent to a rotten orange becomes rotten.
+// Note that it is the kth largest element in the sorted order, not the kth distinct element.
 
-// Return the minimum number of minutes that must elapse until no cell has a fresh orange.If this is impossible, return -1.
+// Can you solve it without sorting ?
 
 
 
-// Example 1:
+//     Example 1:
 
-
-// Input: grid = [[2, 1, 1], [1, 1, 0], [0, 1, 1]]
-// Output: 4
+// Input: nums = [3, 2, 1, 5, 6, 4], k = 2
+// Output: 5
 // Example 2:
 
-// Input: grid = [[2, 1, 1], [0, 1, 1], [1, 0, 1]]
-// Output: -1
-// Explanation: The orange in the bottom left corner(row 2, column 0) is never rotten, because rotting only happens 4 - directionally.
-//     Example 3:
+// Input: nums = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4
+// Output: 4
+class MinHeap {
+    constructor() {
+        this.heap = [];
+    }
 
-// Input: grid = [[0, 2]]
-// Output: 0
-// Explanation: Since there are already no fresh oranges at minute 0, the answer is just 0.
-function orangesRotting(grid) {
-    const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-    const m = grid.length;
-    const n = grid[0].length;
-    const queue = [];
-    let freshOranges = 0;
-    let minutes = 0;
+    insert(value) {
+        this.heap.push(value);
+        this.heapifyUp();
+    }
 
-    // Initialize the queue with rotten oranges and count fresh oranges
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid[i][j] === 2) {
-                queue.push([i, j]);
-            } else if (grid[i][j] === 1) {
-                freshOranges++;
-            }
+    extractMin() {
+        if (this.isEmpty()) {
+            return null;
+        }
+        if (this.heap.length === 1) {
+            return this.heap.pop();
+        }
+        const min = this.heap[0];
+        this.heap[0] = this.heap.pop();
+        this.heapifyDown();
+        return min;
+    }
+
+    heapifyUp() {
+        let currentIndex = this.heap.length - 1;
+        let parentIndex = Math.floor((currentIndex - 1) / 2);
+        while (parentIndex >= 0 && this.heap[currentIndex] < this.heap[parentIndex]) {
+            this.swap(currentIndex, parentIndex);
+            currentIndex = parentIndex;
+            parentIndex = Math.floor((currentIndex - 1) / 2);
         }
     }
 
-    while (queue.length > 0 && freshOranges > 0) {
-        const size = queue.length;
-        for (let i = 0; i < size; i++) {
-            const [x, y] = queue.shift();
-            for (const [dx, dy] of directions) {
-                const newX = x + dx;
-                const newY = y + dy;
-                if (newX >= 0 && newX < m && newY >= 0 && newY < n && grid[newX][newY] === 1) {
-                    grid[newX][newY] = 2;
-                    freshOranges--;
-                    queue.push([newX, newY]);
-                }
+    heapifyDown() {
+        let currentIndex = 0;
+        let leftChildIndex = 2 * currentIndex + 1;
+        let rightChildIndex = 2 * currentIndex + 2;
+        let nextIndex = null;
+        while (
+            (leftChildIndex < this.heap.length && this.heap[currentIndex] > this.heap[leftChildIndex]) ||
+            (rightChildIndex < this.heap.length && this.heap[currentIndex] > this.heap[rightChildIndex])
+        ) {
+            if (
+                rightChildIndex < this.heap.length &&
+                this.heap[rightChildIndex] < this.heap[leftChildIndex]
+            ) {
+                nextIndex = rightChildIndex;
+            } else {
+                nextIndex = leftChildIndex;
             }
+            this.swap(currentIndex, nextIndex);
+            currentIndex = nextIndex;
+            leftChildIndex = 2 * currentIndex + 1;
+            rightChildIndex = 2 * currentIndex + 2;
         }
-        minutes++;
     }
 
-    return freshOranges === 0 ? minutes : -1;
+    swap(i, j) {
+        const temp = this.heap[i];
+        this.heap[i] = this.heap[j];
+        this.heap[j] = temp;
+    }
+
+    isEmpty() {
+        return this.heap.length === 0;
+    }
+
+    peek() {
+        return this.heap[0];
+    }
+}
+
+function findKthLargest(nums, k) {
+    const minHeap = new MinHeap();
+    for (let num of nums) {
+        minHeap.insert(num);
+        if (minHeap.heap.length > k) {
+            minHeap.extractMin();
+        }
+    }
+    return minHeap.peek();
 }
