@@ -1,59 +1,40 @@
-// Successful Pairs of Spells and Potions
+// Find Peak Element
+// Solved
 // Medium
 // Topics
 // Companies
-// Hint
-// You are given two positive integer arrays spells and potions, of length n and m respectively, where spells[i] represents the strength of the ith spell and potions[j] represents the strength of the jth potion.
+// A peak element is an element that is strictly greater than its neighbors.
 
-// You are also given an integer success.A spell and potion pair is considered successful if the product of their strengths is at least success.
+// Given a 0 - indexed integer array nums, find a peak element, and return its index.If the array contains multiple peaks, return the index to any of the peaks.
 
-// Return an integer array pairs of length n where pairs[i] is the number of potions that will form a successful pair with the ith spell.
+// You may imagine that nums[-1] = nums[n] = -∞. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.
+
+// You must write an algorithm that runs in O(log n) time.
 
 
 
 //     Example 1:
 
-// Input: spells = [5, 1, 3], potions = [1, 2, 3, 4, 5], success = 7
-// Output: [4, 0, 3]
-// Explanation:
-// - 0th spell: 5 * [1, 2, 3, 4, 5] =[5, 10, 15, 20, 25]. 4 pairs are successful.
-// - 1st spell: 1 * [1, 2, 3, 4, 5] =[1, 2, 3, 4, 5]. 0 pairs are successful.
-// - 2nd spell: 3 * [1, 2, 3, 4, 5] =[3, 6, 9, 12, 15]. 3 pairs are successful.
-//     Thus, [4, 0, 3] is returned.
-//         Example 2:
+// Input: nums = [1, 2, 3, 1]
+// Output: 2
+// Explanation: 3 is a peak element and your function should return the index number 2.
+// Example 2:
 
-// Input: spells = [3, 1, 2], potions = [8, 5, 8], success = 16
-// Output: [2, 0, 2]
-// Explanation:
-// - 0th spell: 3 * [8, 5, 8] =[24, 15, 24]. 2 pairs are successful.
-// - 1st spell: 1 * [8, 5, 8] =[8, 5, 8]. 0 pairs are successful. 
-// - 2nd spell: 2 * [8, 5, 8] =[16, 10, 16]. 2 pairs are successful.
-//     Thus, [2, 0, 2] is returned.
-function binarySearch(arr, target) {
+// Input: nums = [1, 2, 1, 3, 5, 6, 4]
+// Output: 5
+// Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
+function findPeakElement(nums) {
     let left = 0;
-    let right = arr.length - 1;
-    let count = 0;
+    let right = nums.length - 1;
 
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        if (arr[mid] >= target) {
-            count = arr.length - mid;
-            right = mid - 1;
-        } else {
+    while (left < right) {
+        let mid = Math.floor((left + right) / 2);
+        if (nums[mid] < nums[mid + 1]) {
             left = mid + 1;
+        } else {
+            right = mid;
         }
     }
 
-    return count;
-}
-
-function successfulPairs(spells, potions, success) {
-    potions.sort((a, b) => a - b);
-    const pairs = [];
-
-    for (let i = 0; i < spells.length; i++) {
-        pairs.push(binarySearch(potions, Math.ceil(success / spells[i])));
-    }
-
-    return pairs;
+    return left;
 }
