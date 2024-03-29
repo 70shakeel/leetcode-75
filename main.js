@@ -1,40 +1,49 @@
-// Find Peak Element
-// Solved
+// Koko Eating Bananas
 // Medium
 // Topics
 // Companies
-// A peak element is an element that is strictly greater than its neighbors.
+// Koko loves to eat bananas.There are n piles of bananas, the ith pile has piles[i] bananas.The guards have gone and will come back in h hours.
 
-// Given a 0 - indexed integer array nums, find a peak element, and return its index.If the array contains multiple peaks, return the index to any of the peaks.
+// Koko can decide her bananas - per - hour eating speed of k.Each hour, she chooses some pile of bananas and eats k bananas from that pile.If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
 
-// You may imagine that nums[-1] = nums[n] = -∞. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.
+// Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
 
-// You must write an algorithm that runs in O(log n) time.
+// Return the minimum integer k such that she can eat all the bananas within h hours.
 
 
 
 //     Example 1:
 
-// Input: nums = [1, 2, 3, 1]
-// Output: 2
-// Explanation: 3 is a peak element and your function should return the index number 2.
+// Input: piles = [3, 6, 7, 11], h = 8
+// Output: 4
 // Example 2:
 
-// Input: nums = [1, 2, 1, 3, 5, 6, 4]
-// Output: 5
-// Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
-function findPeakElement(nums) {
-    let left = 0;
-    let right = nums.length - 1;
+// Input: piles = [30, 11, 23, 4, 20], h = 5
+// Output: 30
+// Example 3:
+
+// Input: piles = [30, 11, 23, 4, 20], h = 6
+// Output: 23
+function minEatingSpeed(piles, h) {
+    let left = 1;
+    let right = Math.max(...piles);
 
     while (left < right) {
         let mid = Math.floor((left + right) / 2);
-        if (nums[mid] < nums[mid + 1]) {
-            left = mid + 1;
-        } else {
+        if (canEatAllWithinHours(piles, h, mid)) {
             right = mid;
+        } else {
+            left = mid + 1;
         }
     }
 
     return left;
+}
+
+function canEatAllWithinHours(piles, h, k) {
+    let hours = 0;
+    for (let bananas of piles) {
+        hours += Math.ceil(bananas / k);
+    }
+    return hours <= h;
 }
