@@ -1,49 +1,54 @@
-// Koko Eating Bananas
+// Letter Combinations of a Phone Number
 // Medium
 // Topics
 // Companies
-// Koko loves to eat bananas.There are n piles of bananas, the ith pile has piles[i] bananas.The guards have gone and will come back in h hours.
+// Given a string containing digits from 2 - 9 inclusive, return all possible letter combinations that the number could represent.Return the answer in any order.
 
-// Koko can decide her bananas - per - hour eating speed of k.Each hour, she chooses some pile of bananas and eats k bananas from that pile.If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+// A mapping of digits to letters(just like on the telephone buttons) is given below.Note that 1 does not map to any letters.
 
-// Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
-
-// Return the minimum integer k such that she can eat all the bananas within h hours.
 
 
 
 //     Example 1:
 
-// Input: piles = [3, 6, 7, 11], h = 8
-// Output: 4
+// Input: digits = "23"
+// Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
 // Example 2:
 
-// Input: piles = [30, 11, 23, 4, 20], h = 5
-// Output: 30
+// Input: digits = ""
+// Output: []
 // Example 3:
 
-// Input: piles = [30, 11, 23, 4, 20], h = 6
-// Output: 23
-function minEatingSpeed(piles, h) {
-    let left = 1;
-    let right = Math.max(...piles);
+// Input: digits = "2"
+// Output: ["a", "b", "c"]
+const letterCombinations = function (digits) {
+    if (!digits) return [];
 
-    while (left < right) {
-        let mid = Math.floor((left + right) / 2);
-        if (canEatAllWithinHours(piles, h, mid)) {
-            right = mid;
-        } else {
-            left = mid + 1;
+    const digitToLetters = {
+        '2': 'abc',
+        '3': 'def',
+        '4': 'ghi',
+        '5': 'jkl',
+        '6': 'mno',
+        '7': 'pqrs',
+        '8': 'tuv',
+        '9': 'wxyz'
+    };
+
+    const result = [];
+    const backtrack = (index, path) => {
+        if (index === digits.length) {
+            result.push(path);
+            return;
         }
-    }
 
-    return left;
-}
+        const letters = digitToLetters[digits[index]];
+        for (let letter of letters) {
+            backtrack(index + 1, path + letter);
+        }
+    };
 
-function canEatAllWithinHours(piles, h, k) {
-    let hours = 0;
-    for (let bananas of piles) {
-        hours += Math.ceil(bananas / k);
-    }
-    return hours <= h;
-}
+    backtrack(0, '');
+
+    return result;
+};
