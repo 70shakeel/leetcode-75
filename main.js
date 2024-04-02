@@ -1,39 +1,45 @@
-// N - th Tribonacci Number
+// Min Cost Climbing Stairs
 // Easy
 // Topics
 // Companies
 // Hint
-// The Tribonacci sequence Tn is defined as follows:
+// You are given an integer array cost where cost[i] is the cost of ith step on a staircase.Once you pay the cost, you can either climb one or two steps.
 
-// T0 = 0, T1 = 1, T2 = 1, and Tn + 3 = Tn + Tn + 1 + Tn + 2 for n >= 0.
+// You can either start from the step with index 0, or the step with index 1.
 
-// Given n, return the value of Tn.
+// Return the minimum cost to reach the top of the floor.
 
 
 
 //     Example 1:
 
-// Input: n = 4
-// Output: 4
-// Explanation:
-// T_3 = 0 + 1 + 1 = 2
-// T_4 = 1 + 1 + 2 = 4
+// Input: cost = [10, 15, 20]
+// Output: 15
+// Explanation: You will start at index 1.
+//     - Pay 15 and climb two steps to reach the top.
+// The total cost is 15.
 // Example 2:
 
-// Input: n = 25
-// Output: 1389537
-function tribonacci(n) {
-    if (n === 0) return 0;
-    if (n === 1 || n === 2) return 1;
+// Input: cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
+// Output: 6
+// Explanation: You will start at index 0.
+//     - Pay 1 and climb two steps to reach index 2.
+//         - Pay 1 and climb two steps to reach index 4.
+//             - Pay 1 and climb two steps to reach index 6.
+//                 - Pay 1 and climb one step to reach index 7.
+//                     - Pay 1 and climb two steps to reach index 9.
+//                         - Pay 1 and climb one step to reach the top.
+// The total cost is 6.
+function minCostClimbingStairs(cost) {
+    const length = cost.length;
+    const dp = Array(length).fill(0);
 
-    let dp = new Array(n + 1);
-    dp[0] = 0;
-    dp[1] = 1;
-    dp[2] = 1;
+    dp[0] = cost[0];
+    dp[1] = cost[1];
 
-    for (let i = 3; i <= n; i++) {
-        dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+    for (let i = 2; i < length; i++) {
+        dp[i] = Math.min(dp[i - 1], dp[i - 2]) + cost[i];
     }
 
-    return dp[n];
+    return Math.min(dp[length - 1], dp[length - 2]);
 }
