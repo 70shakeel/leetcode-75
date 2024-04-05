@@ -1,36 +1,44 @@
-// Domino and Tromino Tiling
+// Unique Paths
 // Medium
 // Topics
 // Companies
-// You have two types of tiles: a 2 x 1 domino shape and a tromino shape.You may rotate these shapes.
+// There is a robot on an m x n grid.The robot is initially located at the top - left corner(i.e., grid[0][0]).The robot tries to move to the bottom - right corner(i.e., grid[m - 1][n - 1]).The robot can only move either down or right at any point in time.
+
+// Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom - right corner.
+
+// The test cases are generated so that the answer will be less than or equal to 2 * 109.
 
 
-// Given an integer n, return the number of ways to tile an 2 x n board.Since the answer may be very large, return it modulo 109 + 7.
 
-// In a tiling, every square must be covered by a tile.Two tilings are different if and only if there are two 4 - directionally adjacent cells on the board such that exactly one of the tilings has both squares occupied by a tile.
-
+// Example 1:
 
 
-//     Example 1:
+// Input: m = 3, n = 7
+// Output: 28
+// Example 2:
 
+// Input: m = 3, n = 2
+// Output: 3
+// Explanation: From the top - left corner, there are a total of 3 ways to reach the bottom - right corner:
+// 1. Right -> Down -> Down
+// 2. Down -> Down -> Right
+// 3. Down -> Right -> Down
+function uniquePaths(m, n) {
+    const dp = Array.from({ length: m }, () => Array(n).fill(0));
 
-// Input: n = 3
-// Output: 5
-// Explanation: The five different ways are show above.
-//     Example 2:
-
-// Input: n = 1
-// Output: 1
-function numTilings(n) {
-    const MOD = 1000000007;
-    const dp = new Array(n + 1).fill(0);
-    dp[0] = 1;
-    dp[1] = 1;
-    dp[2] = 2;
-
-    for (let i = 3; i <= n; i++) {
-        dp[i] = (2 * dp[i - 1] + dp[i - 3]) % MOD;
+    for (let i = 0; i < m; i++) {
+        dp[i][0] = 1;
     }
 
-    return dp[n];
+    for (let j = 0; j < n; j++) {
+        dp[0][j] = 1;
+    }
+
+    for (let i = 1; i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+    }
+
+    return dp[m - 1][n - 1];
 }
