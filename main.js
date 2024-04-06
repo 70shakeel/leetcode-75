@@ -1,44 +1,50 @@
-// Unique Paths
+// Longest Common Subsequence
 // Medium
 // Topics
 // Companies
-// There is a robot on an m x n grid.The robot is initially located at the top - left corner(i.e., grid[0][0]).The robot tries to move to the bottom - right corner(i.e., grid[m - 1][n - 1]).The robot can only move either down or right at any point in time.
+// Hint
+// Given two strings text1 and text2, return the length of their longest common subsequence.If there is no common subsequence, return 0.
 
-// Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom - right corner.
+// A subsequence of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters.
 
-// The test cases are generated so that the answer will be less than or equal to 2 * 109.
-
-
-
-// Example 1:
+// For example, "ace" is a subsequence of "abcde".
+// A common subsequence of two strings is a subsequence that is common to both strings.
 
 
-// Input: m = 3, n = 7
-// Output: 28
+
+//     Example 1:
+
+// Input: text1 = "abcde", text2 = "ace"
+// Output: 3
+// Explanation: The longest common subsequence is "ace" and its length is 3.
 // Example 2:
 
-// Input: m = 3, n = 2
+// Input: text1 = "abc", text2 = "abc"
 // Output: 3
-// Explanation: From the top - left corner, there are a total of 3 ways to reach the bottom - right corner:
-// 1. Right -> Down -> Down
-// 2. Down -> Down -> Right
-// 3. Down -> Right -> Down
-function uniquePaths(m, n) {
-    const dp = Array.from({ length: m }, () => Array(n).fill(0));
+// Explanation: The longest common subsequence is "abc" and its length is 3.
+// Example 3:
 
-    for (let i = 0; i < m; i++) {
-        dp[i][0] = 1;
-    }
+// Input: text1 = "abc", text2 = "def"
+// Output: 0
+// Explanation: There is no such common subsequence, so the result is 0.
+function longestCommonSubsequence(text1, text2) {
+    const m = text1.length;
+    const n = text2.length;
 
-    for (let j = 0; j < n; j++) {
-        dp[0][j] = 1;
-    }
+    // Create a 2D array to store lengths of LCS for all subproblems
+    const dp = Array.from(Array(m + 1), () => Array(n + 1).fill(0));
 
-    for (let i = 1; i < m; i++) {
-        for (let j = 1; j < n; j++) {
-            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+    // Fill dp array using dynamic programming approach
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (text1[i - 1] === text2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
         }
     }
 
-    return dp[m - 1][n - 1];
+    // The result is stored at dp[m][n]
+    return dp[m][n];
 }
