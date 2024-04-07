@@ -1,50 +1,45 @@
-// Longest Common Subsequence
+// Best Time to Buy and Sell Stock with Transaction Fee
 // Medium
 // Topics
 // Companies
 // Hint
-// Given two strings text1 and text2, return the length of their longest common subsequence.If there is no common subsequence, return 0.
+// You are given an array prices where prices[i] is the price of a given stock on the ith day, and an integer fee representing a transaction fee.
 
-// A subsequence of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters.
+// Find the maximum profit you can achieve.You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction.
 
-// For example, "ace" is a subsequence of "abcde".
-// A common subsequence of two strings is a subsequence that is common to both strings.
+//     Note:
 
+// You may not engage in multiple transactions simultaneously(i.e., you must sell the stock before you buy again).
+// The transaction fee is only charged once for each stock purchase and sale.
 
 
 //     Example 1:
 
-// Input: text1 = "abcde", text2 = "ace"
-// Output: 3
-// Explanation: The longest common subsequence is "ace" and its length is 3.
+// Input: prices = [1, 3, 2, 8, 4, 9], fee = 2
+// Output: 8
+// Explanation: The maximum profit can be achieved by:
+// - Buying at prices[0] = 1
+//     - Selling at prices[3] = 8
+//         - Buying at prices[4] = 4
+//             - Selling at prices[5] = 9
+// The total profit is((8 - 1) - 2) + ((9 - 4) - 2) = 8.
 // Example 2:
 
-// Input: text1 = "abc", text2 = "abc"
-// Output: 3
-// Explanation: The longest common subsequence is "abc" and its length is 3.
-// Example 3:
+// Input: prices = [1, 3, 7, 5, 10, 3], fee = 3
+// Output: 6
+function maxProfit(prices, fee) {
+    const n = prices.length;
+    if (n <= 1) return 0;
 
-// Input: text1 = "abc", text2 = "def"
-// Output: 0
-// Explanation: There is no such common subsequence, so the result is 0.
-function longestCommonSubsequence(text1, text2) {
-    const m = text1.length;
-    const n = text2.length;
+    let buy = new Array(n).fill(0);
+    let sell = new Array(n).fill(0);
 
-    // Create a 2D array to store lengths of LCS for all subproblems
-    const dp = Array.from(Array(m + 1), () => Array(n + 1).fill(0));
+    buy[0] = -prices[0] - fee;
 
-    // Fill dp array using dynamic programming approach
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            if (text1[i - 1] === text2[j - 1]) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-            } else {
-                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
+    for (let i = 1; i < n; i++) {
+        buy[i] = Math.max(buy[i - 1], sell[i - 1] - prices[i] - fee);
+        sell[i] = Math.max(sell[i - 1], buy[i - 1] + prices[i]);
     }
 
-    // The result is stored at dp[m][n]
-    return dp[m][n];
+    return sell[n - 1];
 }
