@@ -1,38 +1,44 @@
-// Single Number
-// Easy
+// Minimum Flips to Make a OR b Equal to c
+// Medium
 // Topics
 // Companies
-// Given a non - empty array of integers nums, every element appears twice except for one.Find that single one.
-
-// You must implement a solution with a linear runtime complexity and use only constant extra space.
+// Hint
+// Given 3 positives numbers a, b and c.Return the minimum flips required in some bits of a and b to make(a OR b == c). (bitwise OR operation).
+// Flip operation consists of change any single bit 1 to 0 or change the bit 0 to 1 in their binary representation.
 
 
 
 //     Example 1:
 
-// Input: nums = [2, 2, 1]
-// Output: 1
+
+
+// Input: a = 2, b = 6, c = 5
+// Output: 3
+// Explanation: After flips a = 1, b = 4, c = 5 such that(a OR b == c)
 // Example 2:
 
-// Input: nums = [4, 1, 2, 1, 2]
-// Output: 4
-// Example 3:
-
-// Input: nums = [1]
+// Input: a = 4, b = 2, c = 7
 // Output: 1
+function minFlips(a, b, c) {
+    let flips = 0;
 
+    while (a > 0 || b > 0 || c > 0) {
+        const bitA = a & 1;
+        const bitB = b & 1;
+        const bitC = c & 1;
 
-// Constraints:
+        if ((bitA | bitB) !== bitC) {
+            if (bitC === 1) {
+                flips++;
+            } else {
+                flips += (bitA + bitB);
+            }
+        }
 
-// 1 <= nums.length <= 3 * 104
-//     - 3 * 104 <= nums[i] <= 3 * 104
-// Each element in the array appears twice except for one element which appears only once.
-function singleNumber(nums) {
-    let result = 0;
-
-    for (let num of nums) {
-        result ^= num;
+        a >>= 1;
+        b >>= 1;
+        c >>= 1;
     }
 
-    return result;
+    return flips;
 }
