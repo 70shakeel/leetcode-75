@@ -1,44 +1,75 @@
-// Minimum Flips to Make a OR b Equal to c
+// Implement Trie(Prefix Tree)
 // Medium
 // Topics
 // Companies
-// Hint
-// Given 3 positives numbers a, b and c.Return the minimum flips required in some bits of a and b to make(a OR b == c). (bitwise OR operation).
-// Flip operation consists of change any single bit 1 to 0 or change the bit 0 to 1 in their binary representation.
+// A trie(pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings.There are various applications of this data structure, such as autocomplete and spellchecker.
 
+// Implement the Trie class:
+
+// Trie() Initializes the trie object.
+// void insert(String word) Inserts the string word into the trie.
+// boolean search(String word) Returns true if the string word is in the trie(i.e., was inserted before), and false otherwise.
+// boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
 
 
 //     Example 1:
 
+// Input
+// ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+// [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+// Output
+// [null, null, true, false, true, null, true]
 
+// Explanation
+// Trie trie = new Trie();
+// trie.insert("apple");
+// trie.search("apple");   // return True
+// trie.search("app");     // return False
+// trie.startsWith("app"); // return True
+// trie.insert("app");
+// trie.search("app");     // return True
+class TrieNode {
+    constructor() {
+        this.children = {};
+        this.isEndOfWord = false;
+    }
+}
 
-// Input: a = 2, b = 6, c = 5
-// Output: 3
-// Explanation: After flips a = 1, b = 4, c = 5 such that(a OR b == c)
-// Example 2:
-
-// Input: a = 4, b = 2, c = 7
-// Output: 1
-function minFlips(a, b, c) {
-    let flips = 0;
-
-    while (a > 0 || b > 0 || c > 0) {
-        const bitA = a & 1;
-        const bitB = b & 1;
-        const bitC = c & 1;
-
-        if ((bitA | bitB) !== bitC) {
-            if (bitC === 1) {
-                flips++;
-            } else {
-                flips += (bitA + bitB);
-            }
-        }
-
-        a >>= 1;
-        b >>= 1;
-        c >>= 1;
+class Trie {
+    constructor() {
+        this.root = new TrieNode();
     }
 
-    return flips;
+    insert(word) {
+        let node = this.root;
+        for (let char of word) {
+            if (!node.children[char]) {
+                node.children[char] = new TrieNode();
+            }
+            node = node.children[char];
+        }
+        node.isEndOfWord = true;
+    }
+
+    search(word) {
+        let node = this.root;
+        for (let char of word) {
+            if (!node.children[char]) {
+                return false;
+            }
+            node = node.children[char];
+        }
+        return node.isEndOfWord;
+    }
+
+    startsWith(prefix) {
+        let node = this.root;
+        for (let char of prefix) {
+            if (!node.children[char]) {
+                return false;
+            }
+            node = node.children[char];
+        }
+        return true;
+    }
 }
