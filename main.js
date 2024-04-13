@@ -1,37 +1,33 @@
-// Implement Trie(Prefix Tree)
+// Search Suggestions System
 // Medium
 // Topics
 // Companies
-// A trie(pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings.There are various applications of this data structure, such as autocomplete and spellchecker.
+// Hint
+// You are given an array of strings products and a string searchWord.
 
-// Implement the Trie class:
+// Design a system that suggests at most three product names from products after each character of searchWord is typed.Suggested products should have common prefix with searchWord.If there are more than three products with a common prefix return the three lexicographically minimums products.
 
-// Trie() Initializes the trie object.
-// void insert(String word) Inserts the string word into the trie.
-// boolean search(String word) Returns true if the string word is in the trie(i.e., was inserted before), and false otherwise.
-// boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
+// Return a list of lists of the suggested products after each character of searchWord is typed.
+
 
 
 //     Example 1:
 
-// Input
-// ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
-// [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
-// Output
-// [null, null, true, false, true, null, true]
+// Input: products = ["mobile", "mouse", "moneypot", "monitor", "mousepad"], searchWord = "mouse"
+// Output: [["mobile", "moneypot", "monitor"], ["mobile", "moneypot", "monitor"], ["mouse", "mousepad"], ["mouse", "mousepad"], ["mouse", "mousepad"]]
+// Explanation: products sorted lexicographically = ["mobile", "moneypot", "monitor", "mouse", "mousepad"].
+// After typing m and mo all products match and we show user["mobile", "moneypot", "monitor"].
+// After typing mou, mous and mouse the system suggests["mouse", "mousepad"].
+//     Example 2:
 
-// Explanation
-// Trie trie = new Trie();
-// trie.insert("apple");
-// trie.search("apple");   // return True
-// trie.search("app");     // return False
-// trie.startsWith("app"); // return True
-// trie.insert("app");
-// trie.search("app");     // return True
+// Input: products = ["havana"], searchWord = "havana"
+// Output: [["havana"], ["havana"], ["havana"], ["havana"], ["havana"], ["havana"]]
+// Explanation: The only word "havana" will be always suggested while typing the search word.
 class TrieNode {
     constructor() {
         this.children = {};
         this.isEndOfWord = false;
+        this.words = [];
     }
 }
 
@@ -42,34 +38,44 @@ class Trie {
 
     insert(word) {
         let node = this.root;
-        for (let char of word) {
+        for (const char of word) {
             if (!node.children[char]) {
                 node.children[char] = new TrieNode();
             }
             node = node.children[char];
+            node.words.push(word);
+            node.words.sort();
+            if (node.words.length > 3) {
+                node.words.pop();
+            }
         }
         node.isEndOfWord = true;
     }
 
-    search(word) {
+    search(prefix) {
         let node = this.root;
-        for (let char of word) {
+        for (const char of prefix) {
             if (!node.children[char]) {
-                return false;
+                return [];
             }
             node = node.children[char];
         }
-        return node.isEndOfWord;
-    }
-
-    startsWith(prefix) {
-        let node = this.root;
-        for (let char of prefix) {
-            if (!node.children[char]) {
-                return false;
-            }
-            node = node.children[char];
-        }
-        return true;
+        return node.words;
     }
 }
+
+var suggestedProducts = function (products, searchWord) {
+    const trie = new Trie();
+    for (const product of products) {
+        trie.insert(product);
+    }
+
+    const result = [];
+    let prefix = '';
+    for (const char of searchWord) {
+        prefix += char;
+        result.push(trie.search(prefix));
+    }
+
+    return result;
+};
