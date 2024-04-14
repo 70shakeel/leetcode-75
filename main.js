@@ -1,81 +1,45 @@
-// Search Suggestions System
+// Non - overlapping Intervals
 // Medium
 // Topics
 // Companies
-// Hint
-// You are given an array of strings products and a string searchWord.
-
-// Design a system that suggests at most three product names from products after each character of searchWord is typed.Suggested products should have common prefix with searchWord.If there are more than three products with a common prefix return the three lexicographically minimums products.
-
-// Return a list of lists of the suggested products after each character of searchWord is typed.
+// Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non - overlapping.
 
 
 
 //     Example 1:
 
-// Input: products = ["mobile", "mouse", "moneypot", "monitor", "mousepad"], searchWord = "mouse"
-// Output: [["mobile", "moneypot", "monitor"], ["mobile", "moneypot", "monitor"], ["mouse", "mousepad"], ["mouse", "mousepad"], ["mouse", "mousepad"]]
-// Explanation: products sorted lexicographically = ["mobile", "moneypot", "monitor", "mouse", "mousepad"].
-// After typing m and mo all products match and we show user["mobile", "moneypot", "monitor"].
-// After typing mou, mous and mouse the system suggests["mouse", "mousepad"].
+// Input: intervals = [[1, 2], [2, 3], [3, 4], [1, 3]]
+// Output: 1
+// Explanation: [1, 3] can be removed and the rest of the intervals are non - overlapping.
 //     Example 2:
 
-// Input: products = ["havana"], searchWord = "havana"
-// Output: [["havana"], ["havana"], ["havana"], ["havana"], ["havana"], ["havana"]]
-// Explanation: The only word "havana" will be always suggested while typing the search word.
-class TrieNode {
-    constructor() {
-        this.children = {};
-        this.isEndOfWord = false;
-        this.words = [];
-    }
-}
+// Input: intervals = [[1, 2], [1, 2], [1, 2]]
+// Output: 2
+// Explanation: You need to remove two[1, 2] to make the rest of the intervals non - overlapping.
+//     Example 3:
 
-class Trie {
-    constructor() {
-        this.root = new TrieNode();
-    }
+// Input: intervals = [[1, 2], [2, 3]]
+// Output: 0
+// Explanation: You don't need to remove any of the intervals since they're already non - overlapping.
+function eraseOverlapIntervals(intervals) {
+    if (intervals.length === 0) return 0;
 
-    insert(word) {
-        let node = this.root;
-        for (const char of word) {
-            if (!node.children[char]) {
-                node.children[char] = new TrieNode();
-            }
-            node = node.children[char];
-            node.words.push(word);
-            node.words.sort();
-            if (node.words.length > 3) {
-                node.words.pop();
-            }
+    // Sort the intervals based on their end points
+    intervals.sort((a, b) => a[1] - b[1]);
+
+    let count = 0;
+    let end = intervals[0][1];
+
+    // Iterate through the sorted intervals and count the overlapping ones
+    for (let i = 1; i < intervals.length; i++) {
+        if (intervals[i][0] < end) {
+            // Overlapping interval found, increment count
+            count++;
+        } else {
+            // Non-overlapping interval found, update end
+            end = intervals[i][1];
         }
-        node.isEndOfWord = true;
     }
 
-    search(prefix) {
-        let node = this.root;
-        for (const char of prefix) {
-            if (!node.children[char]) {
-                return [];
-            }
-            node = node.children[char];
-        }
-        return node.words;
-    }
+    return count;
 }
-
-var suggestedProducts = function (products, searchWord) {
-    const trie = new Trie();
-    for (const product of products) {
-        trie.insert(product);
-    }
-
-    const result = [];
-    let prefix = '';
-    for (const char of searchWord) {
-        prefix += char;
-        result.push(trie.search(prefix));
-    }
-
-    return result;
-};
