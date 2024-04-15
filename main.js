@@ -1,45 +1,51 @@
-// Non - overlapping Intervals
+// Minimum Number of Arrows to Burst Balloons
 // Medium
 // Topics
 // Companies
-// Given an array of intervals intervals where intervals[i] = [starti, endi], return the minimum number of intervals you need to remove to make the rest of the intervals non - overlapping.
+// There are some spherical balloons taped onto a flat wall that represents the XY - plane.The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend.You do not know the exact y - coordinates of the balloons.
+
+// Arrows can be shot up directly vertically(in the positive y - direction) from different points along the x - axis.A balloon with xstart and xend is burst by an arrow shot at x if xstart <= x <= xend.There is no limit to the number of arrows that can be shot.A shot arrow keeps traveling up infinitely, bursting any balloons in its path.
+
+// Given the array points, return the minimum number of arrows that must be shot to burst all balloons.
 
 
 
 //     Example 1:
 
-// Input: intervals = [[1, 2], [2, 3], [3, 4], [1, 3]]
-// Output: 1
-// Explanation: [1, 3] can be removed and the rest of the intervals are non - overlapping.
+// Input: points = [[10, 16], [2, 8], [1, 6], [7, 12]]
+// Output: 2
+// Explanation: The balloons can be burst by 2 arrows:
+// - Shoot an arrow at x = 6, bursting the balloons[2, 8] and[1, 6].
+// - Shoot an arrow at x = 11, bursting the balloons[10, 16] and[7, 12].
 //     Example 2:
 
-// Input: intervals = [[1, 2], [1, 2], [1, 2]]
-// Output: 2
-// Explanation: You need to remove two[1, 2] to make the rest of the intervals non - overlapping.
+// Input: points = [[1, 2], [3, 4], [5, 6], [7, 8]]
+// Output: 4
+// Explanation: One arrow needs to be shot for each balloon for a total of 4 arrows.
 //     Example 3:
 
-// Input: intervals = [[1, 2], [2, 3]]
-// Output: 0
-// Explanation: You don't need to remove any of the intervals since they're already non - overlapping.
-function eraseOverlapIntervals(intervals) {
-    if (intervals.length === 0) return 0;
+// Input: points = [[1, 2], [2, 3], [3, 4], [4, 5]]
+// Output: 2
+// Explanation: The balloons can be burst by 2 arrows:
+// - Shoot an arrow at x = 2, bursting the balloons[1, 2] and[2, 3].
+// - Shoot an arrow at x = 4, bursting the balloons[3, 4] and[4, 5].
+function findMinArrowShots(points) {
+    // Sort the balloons based on their end points
+    points.sort((a, b) => a[1] - b[1]);
 
-    // Sort the intervals based on their end points
-    intervals.sort((a, b) => a[1] - b[1]);
+    let arrows = 0;
+    let prevEnd = -Infinity;
 
-    let count = 0;
-    let end = intervals[0][1];
+    // Iterate through the sorted balloons
+    for (let balloon of points) {
+        const [start, end] = balloon;
 
-    // Iterate through the sorted intervals and count the overlapping ones
-    for (let i = 1; i < intervals.length; i++) {
-        if (intervals[i][0] < end) {
-            // Overlapping interval found, increment count
-            count++;
-        } else {
-            // Non-overlapping interval found, update end
-            end = intervals[i][1];
+        // If the current balloon starts after the previous end, we need a new arrow
+        if (start > prevEnd) {
+            arrows++;
+            prevEnd = end; // Update the previous end point
         }
     }
 
-    return count;
+    return arrows;
 }
