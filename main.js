@@ -1,51 +1,35 @@
-// Minimum Number of Arrows to Burst Balloons
+// Daily Temperatures
 // Medium
 // Topics
 // Companies
-// There are some spherical balloons taped onto a flat wall that represents the XY - plane.The balloons are represented as a 2D integer array points where points[i] = [xstart, xend] denotes a balloon whose horizontal diameter stretches between xstart and xend.You do not know the exact y - coordinates of the balloons.
-
-// Arrows can be shot up directly vertically(in the positive y - direction) from different points along the x - axis.A balloon with xstart and xend is burst by an arrow shot at x if xstart <= x <= xend.There is no limit to the number of arrows that can be shot.A shot arrow keeps traveling up infinitely, bursting any balloons in its path.
-
-// Given the array points, return the minimum number of arrows that must be shot to burst all balloons.
+// Hint
+// Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature.If there is no future day for which this is possible, keep answer[i] == 0 instead.
 
 
 
 //     Example 1:
 
-// Input: points = [[10, 16], [2, 8], [1, 6], [7, 12]]
-// Output: 2
-// Explanation: The balloons can be burst by 2 arrows:
-// - Shoot an arrow at x = 6, bursting the balloons[2, 8] and[1, 6].
-// - Shoot an arrow at x = 11, bursting the balloons[10, 16] and[7, 12].
-//     Example 2:
+// Input: temperatures = [73, 74, 75, 71, 69, 72, 76, 73]
+// Output: [1, 1, 4, 2, 1, 1, 0, 0]
+// Example 2:
 
-// Input: points = [[1, 2], [3, 4], [5, 6], [7, 8]]
-// Output: 4
-// Explanation: One arrow needs to be shot for each balloon for a total of 4 arrows.
-//     Example 3:
+// Input: temperatures = [30, 40, 50, 60]
+// Output: [1, 1, 1, 0]
+// Example 3:
 
-// Input: points = [[1, 2], [2, 3], [3, 4], [4, 5]]
-// Output: 2
-// Explanation: The balloons can be burst by 2 arrows:
-// - Shoot an arrow at x = 2, bursting the balloons[1, 2] and[2, 3].
-// - Shoot an arrow at x = 4, bursting the balloons[3, 4] and[4, 5].
-function findMinArrowShots(points) {
-    // Sort the balloons based on their end points
-    points.sort((a, b) => a[1] - b[1]);
+// Input: temperatures = [30, 60, 90]
+// Output: [1, 1, 0]
+function dailyTemperatures(temperatures) {
+    const result = new Array(temperatures.length).fill(0);
+    const stack = [];
 
-    let arrows = 0;
-    let prevEnd = -Infinity;
-
-    // Iterate through the sorted balloons
-    for (let balloon of points) {
-        const [start, end] = balloon;
-
-        // If the current balloon starts after the previous end, we need a new arrow
-        if (start > prevEnd) {
-            arrows++;
-            prevEnd = end; // Update the previous end point
+    for (let i = 0; i < temperatures.length; i++) {
+        while (stack.length > 0 && temperatures[i] > temperatures[stack[stack.length - 1]]) {
+            const prevIndex = stack.pop();
+            result[prevIndex] = i - prevIndex;
         }
+        stack.push(i);
     }
 
-    return arrows;
+    return result;
 }
